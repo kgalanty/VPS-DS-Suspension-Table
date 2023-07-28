@@ -1,9 +1,11 @@
 <?php
 
-namespace WHMCS\Module\Addon\LPRServersList\app;
+namespace WHMCS\Module\Addon\VPSDSSuspensionTable\app;
 
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
 use WHMCS\Database\Capsule as DB;
-use WHMCS\Module\Addon\LPRServersList\app\Consts\moduleVersion;
+use WHMCS\Module\Addon\VPSDSSuspensionTable\app\Consts\moduleVersion;
 
 class Addon
 {
@@ -11,7 +13,7 @@ class Addon
     {
         return [
             // Display name for your module
-            'name' => 'LPR Servers List',
+            'name' => 'VPS/DS Suspension Table',
             // Description displayed within the admin interface
             'description' => '',
             // Module author name
@@ -24,6 +26,19 @@ class Addon
         /**
          * Database Statements here
          */
+        DB::schema()->create('vpsds_tickets_status', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('serviceid');
+            $table->dateTime('suspensionticketdate')->nullable();
+            $table->boolean('suspensionticket')->default(false);
+            $table->dateTime('terminationticketdate')->nullable();
+            $table->boolean('terminationticket')->default(false);
+            $table->string('notes')->nullable();
+            $table->foreign('serviceid')
+                ->references('id')->on('tblhosting')
+                ->onDelete('cascade');
+        });
+
         return [
             'status' => 'success',
             'description' => 'The module has been successfuly activated.',

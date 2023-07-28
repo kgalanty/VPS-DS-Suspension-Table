@@ -6,17 +6,18 @@
       padding: 5px;
       border-radius: 5px;
     "
-    class="container"
+    class="container is=widescreen"
   >
     <span
       class="is-family-sans-serif"
       style="display: flex; flex: 1; margin: 10px 0; font-size: 20px"
     >
-     Date of services displayed: <b-datepicker
+      Date of services displayed:&nbsp;<b-datepicker
         v-model="date"
         style=""
         placeholder="Type or select a date..."
         icon="calendar-today"
+        @input="loadData"
       >
       </b-datepicker>
     </span>
@@ -39,7 +40,7 @@
         </b-message>
       </template>
       <b-table-column field="client" label="Name" v-slot="props" width="100">
-        {{ props.row.client }}
+        {{ props.row.client.firstname }} {{ props.row.client.lastname }}
       </b-table-column>
       <b-table-column
         field="hostname"
@@ -47,39 +48,98 @@
         v-slot="props"
         width="100"
       >
-        {{ props.row.hostname }}
+        {{ props.row.domain }}
       </b-table-column>
       <b-table-column
         field="link"
         label="Link to Product/Service"
         v-slot="props"
-        width="100"
+        width="40"
+        ><b-button type="is-primary" @click="openService(props.row.id)"
+          >Open Service</b-button
+        >
+      </b-table-column>
+      <b-table-column
+        field="service_status"
+        label="Service Status"
+        v-slot="props"
+        width="50"
       >
-        {{ props.row.link }}
+        <DomainStatus :status="props.row.domainstatus" />
       </b-table-column>
       <b-table-column
         field="suspension_ticket"
         label="Suspension Ticket"
         v-slot="props"
-        width="100"
+        width="50"
       >
-        {{ props.row.link }}
+        {{
+          showSuspensionTicketDate(
+            props.row.nextduedate,
+            props.row.client.datecreated,
+            1
+          )
+        }}
       </b-table-column>
       <b-table-column
         field="suspension_status"
-        label="Suspension Status"
+        label="Suspension Ticket Opened"
         v-slot="props"
-        width="100"
+        width="50"
       >
-        {{ props.row.link }}
+        <b-checkbox
+          v-model="props.row.ticketsstatus.suspensionticket"
+          true-value="1"
+          false-value="0"
+          @input="
+            setTicketStatus(
+              props.row.id,
+              props.row.ticketsstatus.suspensionticket,
+              'suspensionticket'
+            )
+          "
+        />
       </b-table-column>
       <b-table-column
         field="termination"
-        label="Date on which the service will be sent for termination"
+        label="Termination Ticket"
         v-slot="props"
-        width="150"
+        width="50"
       >
-        {{ props.row.termination }}
+      {{
+          showTerminationTicketDate(
+            props.row.nextduedate,
+            props.row.client.datecreated,
+            1
+          )
+        }}
+      </b-table-column>
+      <b-table-column
+        field="termination_status"
+        label="Termination Ticket Opened"
+        v-slot="props"
+        width="50"
+      >
+        <b-checkbox
+          v-model="props.row.ticketsstatus.terminationticket"
+          true-value="1"
+          false-value="0"
+          @input="
+            setTicketStatus(
+              props.row.id,
+              props.row.ticketsstatus.terminationticket,
+              'terminationticket'
+            )
+          "
+        />
+      </b-table-column>
+      <b-table-column field="notes" label="Notes" v-slot="props">
+        <b-input v-model="props.row.ticketsstatus.notes" @input="setTicketStatus(
+              props.row.id,
+              props.row.ticketsstatus.notes,
+              'notes'
+            )" :value="props.row.ticketsstatus.notes" size="is-small" type="textarea"></b-input>
+        <!-- <b-button type="is-primary" outlined icon-right="pencil" /> -->
       </b-table-column>
     </b-table>
   </article>
@@ -88,20 +148,62 @@
 <script>
 import { defineComponent } from "vue";
 import { mapState, mapActions } from "vuex";
+import { addDays } from "../../helpers/formatDate.js";
+import { showSuspensionTicketDate, showTerminationTicketDate  } from "../../helpers/tickets";
+import DomainStatus from "../DomainStatus.vue";
+
 export default defineComponent({
   name: "SuspensionTable",
-  components: {},
+  components: { DomainStatus },
+  created() {},
   computed: {
-    ...mapState("vpsds", ["services", "total", "date", "loading"]),
+    ...mapState("vpsds", ["services", "total", "loading"]),
+    date: {
+      get() {
+        return this.$store.state.vpsds.date;
+      },
+      set(val) {
+        this.$store.commit("vpsds/setDate", val);
+      },
+    },
   },
+  // watch:
+  // {
+  //   date()
+  //   {
+  //     this.loadData()
+  //   }
+  // },
   methods: {
+    ...mapActions("vpsds", ["loadData", "setTicketStatus"]),
+
+    addDays(date, days) {
+      return addDays(date, days);
+    },
+    showSuspensionTicketDate(nextduedate, clientcreated, isvpsds) {
+      return showSuspensionTicketDate(nextduedate, clientcreated, isvpsds);
+    },
+    showTerminationTicketDate(nextduedate, clientcreated, isvpsds) {
+      return showTerminationTicketDate(nextduedate, clientcreated, isvpsds);
+    },
+    setTicketStatus(serviceid, val, param) {
+      this.$store.dispatch("vpsds/setTicketStatus", { serviceid, val, param });
+    },
     onPageChange(page) {},
-    ...mapActions("vpsds", ["loadData"]),
+    openService(id) {
+      window.open(
+        "https://my.tmdhosting.com/admin/clientsservices.php?id=" + id,
+        "_blank"
+      );
+    },
+    initDate() {
+      let date = new Date();
+      date.setDate(date.getDate() - 1);
+      this.$store.commit("vpsds/setDate", date);
+    },
   },
   mounted() {
-    let date = new Date();
-    date.setDate(date.getDate() - 1);
-    this.$store.commit("vpsds/setDate", date);
+    this.initDate();
     this.loadData();
   },
   data() {

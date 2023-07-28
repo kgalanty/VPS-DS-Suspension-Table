@@ -4,26 +4,22 @@ namespace WHMCS\Module\Addon\VPSDSSuspensionTable\app\Controllers\API;
 
 use WHMCS\Module\Addon\VPSDSSuspensionTable\app\Controllers\API;
 use WHMCS\Database\Capsule as DB;
-use WHMCS\Module\Addon\VPSDSSuspensionTable\app\Models\VPSDSServers;
+use WHMCS\Module\Addon\VPSDSSuspensionTable\app\Models\Service;
 
 class ServerList extends API
 {
     public function get()
     {
-        $query = Groups::with(['pools' => function ($q) {
-            $q->orderBy('primary', 'DESC');
-        }, 'region', 'productgroups', 'pools.servers.server', 'pools.servers.server.stats'])
-            ->get();
-        $response = [];
-        foreach ($query as $region) {
-            foreach ($region->pools as $pool) {
-                foreach ($pool->servers as &$server) {
+        $perpage = 10;
+        $page = $this->input['page'] == 1 ? 0 : ($this->input['page'] - 1) * $perpage;
 
-                    $server->server->stats->statsjsoned = json_decode($server->server->stats->statsjson, 1);
-                }
-            }
-            $response[$region->region_id][] = $region;
-        }
-        return array_values($response);
+        $query = Service::with(['client', 'product', 'ticketsstatus'])->server()->dueDate($this->input['date']);
+        $total = $query->count();
+        $data = $query
+            ->skip((int)$page)
+            ->take((int)$perpage)
+            ->orderBy('id', 'desc')
+            ->get();
+        return ['total' => $total, 'data' => $data];
     }
 }

@@ -16,7 +16,7 @@ function VPSDSSuspensionTable_output($vars)
     $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
     $ctrl = isset($_REQUEST['c']) ? $_REQUEST['c'] : 'home';
     $dispatcher = new Dispatcher();
-    $response = $dispatcher->dispatch($ctrl, $action, $vars);
+    $response = $dispatcher->dispatch($ctrl, $action, $vars, $_REQUEST);
     echo $response;
     exit;
 }

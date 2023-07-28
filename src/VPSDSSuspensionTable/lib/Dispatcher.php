@@ -29,7 +29,7 @@ class Dispatcher
             return 'error: No tpl found';
         }
     }
-    public function dispatch($controller, $action, $parameters)
+    public function dispatch($controller, $action, $parameters, $input)
     {
         $auth = new \WHMCS\Auth();
         if (!$auth->isLoggedIn()) {
@@ -39,12 +39,11 @@ class Dispatcher
             // Default to index if no action specified
             $action = 'index';
         }
-
         if ($_REQUEST['json']) {
             ob_clean();
 
             header('Content-Type: application/json');
-            $input = json_decode(file_get_contents("php://input"), true);
+
             echo json_encode(DispatcherAPI::dispatch($controller, $action . 'JSON', $parameters, $input), 0, 512);
 
             exit;
