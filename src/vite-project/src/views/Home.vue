@@ -1,5 +1,7 @@
 <template>
-<div><SuspensionTable />
+<div>
+  <SuspensionTable /><br>
+  <HandledSuspensionTable />
 </div>
 </template>
 <style scoped>
@@ -10,9 +12,11 @@
 //import HelloWorld from '@/components/HelloWorld.vue'
 //import { mapActions, mapState } from "vuex";
 import SuspensionTable from '../components/Tables/SuspensionTable.vue'
+import HandledSuspensionTable from '../components/Tables/HandledSuspensionTable.vue'
+
 export default {
   name: "Home",
-  components: { SuspensionTable },
+  components: { SuspensionTable, HandledSuspensionTable },
   methods: {  },
   mounted() {
     

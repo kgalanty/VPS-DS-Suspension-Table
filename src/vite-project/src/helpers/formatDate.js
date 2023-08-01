@@ -20,3 +20,8 @@ export function addDays(dateObj, days)
     date.setDate(date.getDate() + days);
     return date;
 }
+
+export function currentDateTime()
+{
+    return new Date().toISOString().slice(0, 19).replace('T', ' ')
+}

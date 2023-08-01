@@ -1,5 +1,4 @@
 import { useRequestGenerator } from "../../helpers/request"
-import { formatDate } from "../../helpers/formatDate";
 import axios from 'axios'
 
 const VPSDSStore = {
@@ -28,12 +27,16 @@ const VPSDSStore = {
         },
         setDate(state, date) { 
             state.date = date
+        },
+        setPage(state, page) { 
+            state.page = page
         }
     },
     actions:
     {
         setTicketStatus(context, payload)
         {
+            console.log(payload)
             const params = useRequestGenerator('Tickets', [`serviceid=${payload.serviceid}`, `val=${payload.val}`, `column=${payload.param}`])
             axios.post(params)
         },
@@ -41,8 +44,8 @@ const VPSDSStore = {
             return new Promise((resolve, reject) => {
                 context.commit('setLoading', true) //run loading
 
-                const params = useRequestGenerator('ServerList', [`page=${context.state.page}`,
-                `date=${formatDate(context.state.date.toDateString()) ?? ''}`])
+                const params = useRequestGenerator('ServerList', [`page=${context.state.page}`, `withtickets=1`
+                ])
 
                 axios
                     .get(params)
@@ -54,6 +57,7 @@ const VPSDSStore = {
                                     data[index].ticketsstatus =  {};
                                     data[index].ticketsstatus['suspensionticket'] = false;
                                     data[index].ticketsstatus['terminationticket'] = false;
+                                    data[index].ticketsstatus['color'] = 'fff';
                                     data[index].ticketsstatus['notes'] = '';
                                 }
                               });

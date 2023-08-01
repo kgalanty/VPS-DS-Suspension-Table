@@ -34,6 +34,8 @@ class Addon
             $table->dateTime('terminationticketdate')->nullable();
             $table->boolean('terminationticket')->default(false);
             $table->string('notes')->nullable();
+            $table->string('color')->nullable();
+            $table->string('deleted_at')->nullable();
             $table->foreign('serviceid')
                 ->references('id')->on('tblhosting')
                 ->onDelete('cascade');

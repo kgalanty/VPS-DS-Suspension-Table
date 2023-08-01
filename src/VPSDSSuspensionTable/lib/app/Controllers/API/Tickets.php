@@ -22,7 +22,7 @@ class Tickets extends API
                 ],
                 [$column => $status]
             );
-        } elseif (in_array($column, ['suspensionticketdate', 'terminationticketdate'])) {
+        } elseif (in_array($column, ['suspensionticketdate', 'terminationticketdate', 'deleted_at'])) {
             $date = $this->input['val'];
             $tstatus = TicketsStatus::updateOrCreate(
                 [

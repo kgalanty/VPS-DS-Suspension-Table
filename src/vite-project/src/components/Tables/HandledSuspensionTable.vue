@@ -1,7 +1,7 @@
 <template>
   <article
     style="
-      background: rgb(66 65 118);
+      background: rgb(47, 14, 126);
       color: #c1bbe3;
       padding: 5px;
       border-radius: 5px;
@@ -12,28 +12,64 @@
       class="is-family-sans-serif"
       style="display: flex; flex: 1; margin: 10px 0; font-size: 20px"
     >
-      Date of services displayed:&nbsp;<b-datepicker
-        v-model="date"
-        style=""
-        placeholder="Type or select a date..."
-        icon="calendar-today"
-        @input="loadData"
-      >
-      </b-datepicker>
+      Handled services
     </span>
     <b-table
+      detailed
       :total="total"
       :data="services"
       paginated
       backend-pagination
       backend-sorting
       @page-change="onPageChange"
-      :per-page="25"
+      :per-page="20"
       :loading="this.loading"
+      :row-class="colorRows"
     >
+      <template #detail="props">
+        <div class="columns is-mobile is-centered is-vcentered">
+          <div class="column is-narrow">
+            <p class="bd-notification is-primary"><strong>Color</strong></p>
+          </div>
+          <div class="column is-narrow">
+            <p class="bd-notification is-primary">
+              <b-select
+                v-model="props.row.ticketsstatus.color"
+                placeholder="Color"
+                @input="
+                  setTicketStatus(
+                    props.row.id,
+                    props.row.ticketsstatus.color,
+                    'color'
+                  )
+                "
+              >
+                <option value="white">-White-</option>
+                <option value="green">Green</option>
+                <option value="yellow">Yellow</option>
+                <option value="red">Red</option>
+              </b-select>
+            </p>
+          </div>
+        </div>
+        <div class="columns is-mobile is-centered is-vcentered">
+          <div class="column is-narrow">
+            <p class="bd-notification is-primary"><strong>Delete</strong></p>
+          </div>
+          <div class="column is-narrow">
+            <p class="bd-notification is-primary"><b-button type="is-danger" @click="
+                  setDeleted(
+                    props.row.id
+                  )
+                "
+                icon-right="delete" />
+            </p>
+          </div>
+        </div>
+      </template>
       <template #empty style="text-align: center">
         <span v-if="loading === false">
-          <p>No entries for given criteria. Try to loosen the filters.</p>
+          <p>No services here.</p>
         </span>
         <b-message type="is-info" has-icon v-if="loading">
           Loading data...
@@ -46,7 +82,8 @@
         field="hostname"
         label="Hostname"
         v-slot="props"
-        width="100" centered
+        width="100"
+        centered
       >
         {{ props.row.domain }}
       </b-table-column>
@@ -54,7 +91,8 @@
         field="link"
         label="Link to Product/Service"
         v-slot="props"
-        width="40" centered
+        width="40"
+        centered
         ><b-button type="is-primary" @click="openService(props.row.id)"
           >Open Service</b-button
         >
@@ -63,7 +101,8 @@
         field="service_status"
         label="Service Status"
         v-slot="props"
-        width="50" centered
+        width="50"
+        centered
       >
         <DomainStatus :status="props.row.domainstatus" />
       </b-table-column>
@@ -71,7 +110,8 @@
         field="suspension_ticket"
         label="Suspension Ticket"
         v-slot="props"
-        width="50" centered
+        width="50"
+        centered
       >
         {{
           showSuspensionTicketDate(
@@ -85,7 +125,8 @@
         field="suspension_status"
         label="Suspension Ticket Opened"
         v-slot="props"
-        width="50" centered
+        width="50"
+        centered
       >
         <b-checkbox
           v-model="props.row.ticketsstatus.suspensionticket"
@@ -104,7 +145,8 @@
         field="termination"
         label="Termination Ticket"
         v-slot="props"
-        width="50" centered
+        centered
+        width="50"
       >
         {{
           showTerminationTicketDate(
@@ -118,7 +160,8 @@
         field="termination_status"
         label="Termination Ticket Opened"
         v-slot="props"
-        width="50" centered
+        width="50"
+        centered
       >
         <b-checkbox
           v-model="props.row.ticketsstatus.terminationticket"
@@ -133,7 +176,13 @@
           "
         />
       </b-table-column>
-      <b-table-column field="notes" label="Notes" v-slot="props" width="150" centered>
+      <b-table-column
+        field="notes"
+        label="Notes"
+        v-slot="props"
+        width="150"
+        centered
+      >
         <b-input
           v-model="props.row.ticketsstatus.notes"
           @input="
@@ -147,6 +196,7 @@
           size="is-small"
           type="textarea"
         ></b-input>
+        <!-- <b-button type="is-primary" outlined icon-right="pencil" /> -->
       </b-table-column>
     </b-table>
   </article>
@@ -155,7 +205,7 @@
 <script>
 import { defineComponent } from "vue";
 import { mapState, mapActions } from "vuex";
-import { addDays } from "../../helpers/formatDate.js";
+import { addDays, currentDateTime } from "../../helpers/formatDate.js";
 import {
   showSuspensionTicketDate,
   showTerminationTicketDate,
@@ -163,30 +213,31 @@ import {
 import DomainStatus from "../DomainStatus.vue";
 
 export default defineComponent({
-  name: "SuspensionTable",
+  name: "HandledSuspensionTable",
   components: { DomainStatus },
   created() {},
   computed: {
-    ...mapState("vpsds", ["services", "total", "loading"]),
+    ...mapState("hvpsds", ["services", "total", "loading"]),
     date: {
       get() {
         return this.$store.state.vpsds.date;
       },
       set(val) {
-        this.$store.commit("vpsds/setDate", val);
+        this.$store.commit("hvpsds/setDate", val);
       },
     },
   },
-  // watch:
-  // {
-  //   date()
-  //   {
-  //     this.loadData()
-  //   }
-  // },
-  methods: {
-    ...mapActions("vpsds", ["loadData", "setTicketStatus"]),
 
+  methods: {
+    ...mapActions("hvpsds", ["loadData", "setTicketStatus"]),
+    setDeleted(serviceid)
+    {
+      this.setTicketStatus(serviceid, currentDateTime(), 'deleted_at');
+      this.loadData();
+    },
+    colorRows(row) {
+      return row.ticketsstatus ? "row-" + row.ticketsstatus.color : "row-white";
+    },
     addDays(date, days) {
       return addDays(date, days);
     },
@@ -197,23 +248,20 @@ export default defineComponent({
       return showTerminationTicketDate(nextduedate, clientcreated, isvpsds);
     },
     setTicketStatus(serviceid, val, param) {
-      this.$store.dispatch("vpsds/setTicketStatus", { serviceid, val, param });
+      this.$store.dispatch("hvpsds/setTicketStatus", { serviceid, val, param });
     },
-    onPageChange(page) {},
+    onPageChange(page) {
+      this.$store.commit("hvpsds/setPage", page);
+      this.loadData();
+    },
     openService(id) {
       window.open(
         "https://my.tmdhosting.com/admin/clientsservices.php?id=" + id,
         "_blank"
       );
     },
-    initDate() {
-      let date = new Date();
-      date.setDate(date.getDate() - 1);
-      this.$store.commit("vpsds/setDate", date);
-    },
   },
   mounted() {
-    this.initDate();
     this.loadData();
   },
   data() {

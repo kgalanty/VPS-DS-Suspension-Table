@@ -1,6 +1,6 @@
 <template>
   <div class="footerclass">
-    Footer
+    &copy; TMD
   </div>
 </template>
 <style>

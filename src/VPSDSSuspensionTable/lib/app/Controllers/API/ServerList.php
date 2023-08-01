@@ -10,10 +10,23 @@ class ServerList extends API
 {
     public function get()
     {
-        $perpage = 10;
+        $perpage = 20;
         $page = $this->input['page'] == 1 ? 0 : ($this->input['page'] - 1) * $perpage;
 
-        $query = Service::with(['client', 'product', 'ticketsstatus'])->server()->dueDate($this->input['date']);
+        $query = Service::with(['client', 'product', 'ticketsstatus'])->server();
+        
+        if ($this->input['withtickets']) {
+            $query = $query->has('ticketsstatus');
+        }
+        else
+        {
+            $query = $query->doesnthave('ticketsstatus');
+        }
+
+        if($this->input['date'])
+        {
+            $query = $query->dueDate($this->input['date']);
+        }
         $total = $query->count();
         $data = $query
             ->skip((int)$page)
