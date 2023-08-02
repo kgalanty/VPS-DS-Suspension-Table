@@ -13,32 +13,31 @@ export default defineComponent({
     status: String
   },
   computed:
-  {},
-  methods: {
-    calculateStatus()
+  {
+    type()
     {
-      this.icon = 'circle'
       if(this.status === 'Active')
       {
-        this.type = 'is-success'
+        return 'is-success'
       }
       else if(this.status == 'Suspended')
       {
-        this.type = 'is-warning'
+        return 'is-warning'
       }
       else if(this.status == 'Terminated' || this.status == 'Cancelled')
       {
-        this.type = 'is-danger'
+        return 'is-danger'
       }
     }
   },
+  methods: {
+    
+  },
   mounted() {
-    this.calculateStatus();
   },
   data() {
     return {
-        icon: '',
-        type: '',
+        icon: 'circle',
     };
   },
 });

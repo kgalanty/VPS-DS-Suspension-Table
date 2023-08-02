@@ -12,7 +12,7 @@
       class="is-family-sans-serif"
       style="display: flex; flex: 1; margin: 10px 0; font-size: 20px"
     >
-      Date of services displayed:&nbsp;<b-datepicker
+      Display services with this `next due date`: &nbsp;<b-datepicker
         v-model="date"
         style=""
         placeholder="Type or select a date..."

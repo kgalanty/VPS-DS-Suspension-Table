@@ -152,3 +152,10 @@
 {
   background-color: #fff;
 }
+.b-table {
+  .table {
+    td {
+      vertical-align: middle;
+    }
+  }
+}
