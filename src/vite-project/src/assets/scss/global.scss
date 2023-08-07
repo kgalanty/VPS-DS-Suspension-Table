@@ -159,3 +159,16 @@
     }
   }
 }
+@media screen and (min-width: 1900px) {
+  .container {
+    max-width: 1800px !important;
+  }
+}
+@media screen and (max-width: 768px)
+{
+  .is-empty {
+  display:block;
+  background-color:white;
+  padding:20px 0;
+}
+}

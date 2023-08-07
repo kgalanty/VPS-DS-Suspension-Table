@@ -14,9 +14,11 @@ class DispatcherAPI {
             $action = 'index';
         }
         $controller = 'WHMCS\\Module\\Addon\\VPSDSSuspensionTable\\app\\Controllers\\API\\'.ucfirst($controller);
+        $body = json_decode(file_get_contents("php://input"), true);
+        
         if(class_exists($controller))
         {
-            $controller = new $controller($parameters, $input);
+            $controller = new $controller($parameters, $input, $body);
         }
         else
         {

@@ -33,7 +33,7 @@ class Addon
             $table->boolean('suspensionticket')->default(false);
             $table->dateTime('terminationticketdate')->nullable();
             $table->boolean('terminationticket')->default(false);
-            $table->string('notes')->nullable();
+            $table->text('notes')->nullable();
             $table->string('color')->nullable();
             $table->string('deleted_at')->nullable();
             $table->foreign('serviceid')
@@ -41,6 +41,12 @@ class Addon
                 ->onDelete('cascade');
         });
 
+        DB::schema()->create('vpsds_tickettpl', function (Blueprint $table) {
+            $table->increments('id');
+            $table->text('name');
+            $table->text('title');
+            $table->text('content');
+        });
         return [
             'status' => 'success',
             'description' => 'The module has been successfuly activated.',

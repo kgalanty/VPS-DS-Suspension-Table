@@ -6,6 +6,7 @@
     />
     <div id="nav" class="hover">
       <router-link to="/">VPS/DS Table</router-link>
+      <router-link to="/tickettemplates">Tickets Templates</router-link>
     </div>
     <router-view />
     <Footer />

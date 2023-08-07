@@ -3066,7 +3066,11 @@ fieldset[disabled] .button {
     max-width: 1344px;
   }
 }
-
+@media screen and (min-width: 1900px) and (max-width: 2144px) {
+  .container {
+    max-width: 1800px;
+  }
+}
 .content li + li {
   margin-top: 0.25em;
 }

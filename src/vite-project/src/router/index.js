@@ -1,13 +1,26 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Tpl from '../views/Home.vue'
+import Home from '../views/Home.vue'
+import Tickets from '../views/Tickets.vue'
+import NewTicketTemplate from '../views/NewTicketTemplate.vue'
+
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Tpl
+    component: Home
+  },
+  {
+    path: '/tickettemplates',
+    name: 'Tickets',
+    component: Tickets
+  },
+  {
+    path: '/tickettemplates/new',
+    name: 'NewTicketTemplate',
+    component: NewTicketTemplate
   },
 ]
 

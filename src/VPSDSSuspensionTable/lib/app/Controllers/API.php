@@ -7,14 +7,16 @@ abstract class API
 {
     use AuthMid;
 
-    public $params, $input;
+    public $params, $input, $body;
     //public static $needAuth;
-    public function __construct($params, $input)
+    public function __construct($params, $input, $body)
     {
         //Vars from module output function
         $this->params = $params;
         //Entire php input variables
         $this->input = $input;
+        $this->body = $body;
+        
         if(!$this->checkPermission())
         {
             exit;

@@ -30,9 +30,7 @@ class Tickets extends API
                 ],
                 [$column => $date]
             );
-        }
-        else
-        {
+        } else {
             $tstatus = TicketsStatus::updateOrCreate(
                 [
                     'serviceid' => $serviceid

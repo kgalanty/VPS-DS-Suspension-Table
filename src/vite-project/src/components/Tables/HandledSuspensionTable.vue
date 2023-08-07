@@ -6,7 +6,7 @@
       padding: 5px;
       border-radius: 5px;
     "
-    class="container is=widescreen"
+    class="container is-widescreen"
   >
     <span
       class="is-family-sans-serif"
@@ -125,7 +125,7 @@
         field="suspension_status"
         label="Suspension Ticket Opened"
         v-slot="props"
-        width="50"
+        width="100"
         centered
       >
         <b-checkbox
@@ -146,7 +146,7 @@
         label="Termination Ticket"
         v-slot="props"
         centered
-        width="50"
+        width="100"
       >
         {{
           showTerminationTicketDate(
@@ -160,7 +160,7 @@
         field="termination_status"
         label="Termination Ticket Opened"
         v-slot="props"
-        width="50"
+        width="100"
         centered
       >
         <b-checkbox
@@ -180,8 +180,7 @@
         field="notes"
         label="Notes"
         v-slot="props"
-        width="150"
-        centered
+        centered width="250"
       >
         <b-input
           v-model="props.row.ticketsstatus.notes"
@@ -209,6 +208,8 @@ import { addDays, currentDateTime } from "../../helpers/formatDate.js";
 import {
   showSuspensionTicketDate,
   showTerminationTicketDate,
+  setTicketStatus,
+  OnTablePageChange,
 } from "../../helpers/tickets";
 import DomainStatus from "../DomainStatus.vue";
 
@@ -247,11 +248,11 @@ export default defineComponent({
     showTerminationTicketDate(nextduedate, clientcreated, isvpsds) {
       return showTerminationTicketDate(nextduedate, clientcreated, isvpsds);
     },
-    setTicketStatus(serviceid, val, param) {
-      this.$store.dispatch("hvpsds/setTicketStatus", { serviceid, val, param });
+    setTicketStatus(serviceid, val, column) {
+      setTicketStatus(serviceid, val, column);
     },
     onPageChange(page) {
-      this.$store.commit("hvpsds/setPage", page);
+      OnTablePageChange(page);
       this.loadData();
     },
     openService(id) {
@@ -266,7 +267,6 @@ export default defineComponent({
   },
   data() {
     return {
-      perPage: 25,
     };
   },
 });

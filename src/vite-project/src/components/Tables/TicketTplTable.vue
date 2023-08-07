@@ -12,14 +12,7 @@
       class="is-family-sans-serif"
       style="display: flex; flex: 1; margin: 10px 0; font-size: 20px"
     >
-      Display services with this `next due date`: &nbsp;<b-datepicker
-        v-model="date"
-        style=""
-        placeholder="Type or select a date..."
-        icon="calendar-today"
-        @input="loadData"
-      >
-      </b-datepicker>
+      Templates for tickets&nbsp;<b-button type="is-primary" outlined inverted @click="$router.push('/tickettemplates/new')">Add New</b-button>
     </span>
     <b-table
       :total="total"
@@ -39,99 +32,16 @@
           Loading data...
         </b-message>
       </template>
-      <b-table-column field="client" label="Name" v-slot="props" width="100">
-        {{ props.row.client.firstname }} {{ props.row.client.lastname }}
+      <b-table-column field="name" label="Name" v-slot="props" >
+        {{ props.row.name }} 
       </b-table-column>
       <b-table-column
-        field="hostname"
-        label="Hostname"
+        field="actions"
+        label="Actions"
         v-slot="props"
         width="100" centered
       >
         {{ props.row.domain }}
-      </b-table-column>
-      <b-table-column
-        field="link"
-        label="Link to Product/Service"
-        v-slot="props"
-        width="40" centered
-        ><b-button type="is-primary" @click="openService(props.row.id)"
-          >Open Service</b-button
-        >
-      </b-table-column>
-      <b-table-column
-        field="service_status"
-        label="Service Status"
-        v-slot="props"
-        width="50" centered
-      >
-        <DomainStatus :status="props.row.domainstatus" />
-      </b-table-column>
-      <b-table-column
-        field="suspension_ticket"
-        label="Suspension Ticket"
-        v-slot="props"
-        width="50" centered
-      >
-        {{
-          showSuspensionTicketDate(
-            props.row.nextduedate,
-            props.row.client.datecreated,
-            1
-          )
-        }}
-      </b-table-column>
-      <b-table-column
-        field="suspension_status"
-        label="Suspension Ticket Opened"
-        v-slot="props"
-        width="50" centered
-      >
-        <b-checkbox
-          v-model="props.row.ticketsstatus.suspensionticket"
-          true-value="1"
-          false-value="0"
-          @input="
-            setTicketStatus(
-              props.row.id,
-              props.row.ticketsstatus.suspensionticket,
-              'suspensionticket'
-            )
-          "
-        />
-      </b-table-column>
-      <b-table-column
-        field="termination"
-        label="Termination Ticket"
-        v-slot="props"
-        width="50" centered
-      >
-        {{
-          showTerminationTicketDate(
-            props.row.nextduedate,
-            props.row.client.datecreated,
-            1
-          )
-        }}
-      </b-table-column>
-      <b-table-column
-        field="termination_status"
-        label="Termination Ticket Opened"
-        v-slot="props"
-        width="50" centered
-      >
-        <b-checkbox
-          v-model="props.row.ticketsstatus.terminationticket"
-          true-value="1"
-          false-value="0"
-          @input="
-            setTicketStatus(
-              props.row.id,
-              props.row.ticketsstatus.terminationticket,
-              'terminationticket'
-            )
-          "
-        />
       </b-table-column>
       <b-table-column field="notes" label="Notes" v-slot="props" width="250" centered>
         <b-input
@@ -162,11 +72,10 @@ import {
   setTicketStatus,
   OnTablePageChange,
 } from "../../helpers/tickets";
-import DomainStatus from "../DomainStatus.vue";
 
 export default defineComponent({
-  name: "SuspensionTable",
-  components: { DomainStatus },
+  name: "TicketTplTable",
+  components: {  },
   created() {},
   computed: {
     ...mapState("vpsds", ["services", "total", "loading"]),
