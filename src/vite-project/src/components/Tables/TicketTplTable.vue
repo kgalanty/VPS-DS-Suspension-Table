@@ -12,11 +12,17 @@
       class="is-family-sans-serif"
       style="display: flex; flex: 1; margin: 10px 0; font-size: 20px"
     >
-      Templates for tickets&nbsp;<b-button type="is-primary" outlined inverted @click="$router.push('/tickettemplates/new')">Add New</b-button>
+      Templates for tickets&nbsp;<b-button
+        type="is-primary"
+        outlined
+        inverted
+        @click="$router.push('/tickettemplates/new')"
+        >Add New</b-button
+      >
     </span>
     <b-table
       :total="total"
-      :data="services"
+      :data="templates"
       paginated
       backend-pagination
       backend-sorting
@@ -26,37 +32,41 @@
     >
       <template #empty style="text-align: center">
         <span v-if="loading === false">
-          <p class="empty">No entries for given criteria. Try to loosen the filters.</p>
+          <p class="empty">
+            No entries for given criteria. Try to loosen the filters.
+          </p>
         </span>
         <b-message type="is-info" has-icon v-if="loading">
           Loading data...
         </b-message>
       </template>
-      <b-table-column field="name" label="Name" v-slot="props" >
-        {{ props.row.name }} 
+      <b-table-column field="name" label="Name" v-slot="props">
+        {{ props.row.name }}
+      </b-table-column>
+      <b-table-column field="title" label="Ticket Title" v-slot="props">
+        {{ props.row.title }}
       </b-table-column>
       <b-table-column
         field="actions"
         label="Actions"
+        width="300"
         v-slot="props"
-        width="100" centered
+        centered
       >
-        {{ props.row.domain }}
-      </b-table-column>
-      <b-table-column field="notes" label="Notes" v-slot="props" width="250" centered>
-        <b-input
-          v-model="props.row.ticketsstatus.notes"
-          @input="
-            setTicketStatus(
-              props.row.id,
-              props.row.ticketsstatus.notes,
-              'notes'
-            )
-          "
-          :value="props.row.ticketsstatus.notes"
-          size="is-small"
-          type="textarea"
-        ></b-input>
+        <div class="buttons" style="margin: 0 auto; text-align: center">
+          <b-button
+            type="is-standard"
+            icon-left="pencil"
+            @click="editTemplate(props.row.id)"
+            >Edit
+          </b-button>
+          <b-button
+            type="is-danger"
+            icon-left="delete"
+            @click="deleteTemplate(props.row.id)"
+            >Delete</b-button
+          >
+        </div>
       </b-table-column>
     </b-table>
   </article>
@@ -65,28 +75,14 @@
 <script>
 import { defineComponent } from "vue";
 import { mapState, mapActions } from "vuex";
-import { addDays } from "../../helpers/formatDate.js";
-import {
-  showSuspensionTicketDate,
-  showTerminationTicketDate,
-  setTicketStatus,
-  OnTablePageChange,
-} from "../../helpers/tickets";
+import { OnTablePageChange } from "../../helpers/tickets";
 
 export default defineComponent({
   name: "TicketTplTable",
-  components: {  },
+  components: {},
   created() {},
   computed: {
-    ...mapState("vpsds", ["services", "total", "loading"]),
-    date: {
-      get() {
-        return this.$store.state.vpsds.date;
-      },
-      set(val) {
-        this.$store.commit("vpsds/setDate", val);
-      },
-    },
+    ...mapState("ticketstpl", ["templates", "total", "loading"]),
   },
   // watch:
   // {
@@ -96,48 +92,44 @@ export default defineComponent({
   //   }
   // },
   methods: {
-    ...mapActions("vpsds", ["loadData"]),
-
-    addDays(date, days) {
-      return addDays(date, days);
+    ...mapActions("ticketstpl", ["loadData", "delete"]),
+    editTemplate(id) {
+      this.$router.push(`/tickettemplates/edit/${id}`);
     },
-    showSuspensionTicketDate(nextduedate, clientcreated, isvpsds) {
-      return showSuspensionTicketDate(nextduedate, clientcreated, isvpsds);
-    },
-    showTerminationTicketDate(nextduedate, clientcreated, isvpsds) {
-      return showTerminationTicketDate(nextduedate, clientcreated, isvpsds);
-    },
-    setTicketStatus(serviceid, val, column) {
-      setTicketStatus(serviceid, val, column);
+    deleteTemplate(id) {
+      this.$buefy.dialog.confirm({
+        message: "Are you sure you wish to delete this template?",
+        onConfirm: () => {
+          this.delete(id).then((result) => {
+            if (result === 1) {
+              this.$buefy.toast.open({
+                message: "Deleted successfuly",
+                type: "is-success",
+              });
+            } else if (result.error) {
+              this.$buefy.toast.open({
+                message: result.error,
+                type: "is-danger",
+              });
+            }
+          });
+        },
+      });
     },
     onPageChange(page) {
       OnTablePageChange(page);
       this.loadData();
     },
-    openService(id) {
-      window.open(
-        "https://my.tmdhosting.com/admin/clientsservices.php?id=" + id,
-        "_blank"
-      );
-    },
-    initDate() {
-      let date = new Date();
-      date.setDate(date.getDate() - 1);
-      this.$store.commit("vpsds/setDate", date);
-    },
   },
   mounted() {
-    this.initDate();
     this.loadData();
   },
   data() {
-    return {
-    };
+    return {};
   },
 });
 </script>
 <style>
-
 .is-empty {
   text-align: center;
 }

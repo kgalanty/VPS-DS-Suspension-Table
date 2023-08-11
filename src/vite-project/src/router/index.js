@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Tickets from '../views/Tickets.vue'
-import NewTicketTemplate from '../views/NewTicketTemplate.vue'
+import TicketTemplate from '../views/TicketTemplate.vue'
 
 Vue.use(VueRouter)
 
@@ -20,7 +20,12 @@ const routes = [
   {
     path: '/tickettemplates/new',
     name: 'NewTicketTemplate',
-    component: NewTicketTemplate
+    component: TicketTemplate
+  },
+  {
+    path: '/tickettemplates/edit/:tplid',
+    name: 'EditTicketTemplate',
+    component: TicketTemplate
   },
 ]
 
