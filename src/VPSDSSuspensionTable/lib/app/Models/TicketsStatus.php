@@ -31,4 +31,9 @@ class TicketsStatus extends Model
     {
         return $this->belongsTo('\WHMCS\Module\Addon\VPSDSSuspensionTable\app\Models\Service', 'serviceid', 'id');
     }
+
+    public function scopeNotDeleted($query)
+    {
+        return $query->whereNull('deleted_at');
+    }
 }

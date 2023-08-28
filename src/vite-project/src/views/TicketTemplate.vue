@@ -61,7 +61,7 @@
             <nav class="level">
               <div class="level-left">
                   <div class="level-item">
-                    <b-button type="is-primary" @click="back"> Back to list </b-button>
+                    <b-button type="is-success" @click="back"  inversed> Back to list </b-button>
                   </div>
               </div>
               <div class="level-right">

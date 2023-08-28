@@ -37,7 +37,7 @@ const VPSDSStore = {
         setTicketStatus(context, payload)
         {
             console.log(payload)
-            const params = useRequestGenerator('Tickets',[])
+            const params = useRequestGenerator('TicketsStatus',[])
             axios.post(params, payload)
         },
         loadData(context) {

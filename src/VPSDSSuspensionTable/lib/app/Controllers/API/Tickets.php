@@ -17,8 +17,8 @@ class Tickets extends API
                 return ['error' => 'No id received'];
             }
 
-            //$tpl = TicketTpl::where('id', $id)->delete();
-            $tpl = 1;
+            $tpl = TicketTpl::where('id', $id)->delete();
+            //$tpl = 1;
             if ($tpl) {
                 return ['result' => $tpl];
             } else {

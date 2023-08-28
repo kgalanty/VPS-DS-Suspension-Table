@@ -57,12 +57,12 @@
             <p class="bd-notification is-primary"><strong>Delete</strong></p>
           </div>
           <div class="column is-narrow">
-            <p class="bd-notification is-primary"><b-button type="is-danger" @click="
-                  setDeleted(
-                    props.row.id
-                  )
-                "
-                icon-right="delete" />
+            <p class="bd-notification is-primary">
+              <b-button
+                type="is-danger"
+                @click="setDeleted(props.row.id)"
+                icon-right="delete"
+              />
             </p>
           </div>
         </div>
@@ -104,7 +104,9 @@
         width="50"
         centered
       >
-        <DomainStatus :status="props.row.domainstatus" />
+        <b-tooltip :label="props.row.domainstatus"
+          ><DomainStatus :status="props.row.domainstatus"
+        /></b-tooltip>
       </b-table-column>
       <b-table-column
         field="suspension_ticket"
@@ -180,7 +182,8 @@
         field="notes"
         label="Notes"
         v-slot="props"
-        centered width="250"
+        centered
+        width="250"
       >
         <b-input
           v-model="props.row.ticketsstatus.notes"
@@ -231,9 +234,8 @@ export default defineComponent({
 
   methods: {
     ...mapActions("hvpsds", ["loadData", "setTicketStatus"]),
-    setDeleted(serviceid)
-    {
-      this.setTicketStatus(serviceid, currentDateTime(), 'deleted_at');
+    setDeleted(serviceid) {
+      this.setTicketStatus(serviceid, currentDateTime(), "deleted_at");
       this.loadData();
     },
     colorRows(row) {
@@ -266,8 +268,7 @@ export default defineComponent({
     this.loadData();
   },
   data() {
-    return {
-    };
+    return {};
   },
 });
 </script>

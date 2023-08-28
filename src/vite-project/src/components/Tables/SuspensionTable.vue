@@ -33,7 +33,9 @@
     >
       <template #empty style="text-align: center">
         <span v-if="loading === false">
-          <p class="empty">No entries for given criteria. Try to loosen the filters.</p>
+          <p class="empty">
+            No entries for given criteria.
+          </p>
         </span>
         <b-message type="is-info" has-icon v-if="loading">
           Loading data...
@@ -46,7 +48,8 @@
         field="hostname"
         label="Hostname"
         v-slot="props"
-        width="100" centered
+        width="100"
+        centered
       >
         {{ props.row.domain }}
       </b-table-column>
@@ -54,7 +57,8 @@
         field="link"
         label="Link to Product/Service"
         v-slot="props"
-        width="40" centered
+        width="40"
+        centered
         ><b-button type="is-primary" @click="openService(props.row.id)"
           >Open Service</b-button
         >
@@ -63,15 +67,19 @@
         field="service_status"
         label="Service Status"
         v-slot="props"
-        width="50" centered
+        width="50"
+        centered
       >
-        <DomainStatus :status="props.row.domainstatus" />
+        <b-tooltip :label="props.row.domainstatus">
+          <DomainStatus :status="props.row.domainstatus" />
+        </b-tooltip>
       </b-table-column>
       <b-table-column
         field="suspension_ticket"
         label="Suspension Ticket"
         v-slot="props"
-        width="50" centered
+        width="50"
+        centered
       >
         {{
           showSuspensionTicketDate(
@@ -85,7 +93,8 @@
         field="suspension_status"
         label="Suspension Ticket Opened"
         v-slot="props"
-        width="50" centered
+        width="50"
+        centered
       >
         <b-checkbox
           v-model="props.row.ticketsstatus.suspensionticket"
@@ -96,7 +105,7 @@
               props.row.id,
               props.row.ticketsstatus.suspensionticket,
               'suspensionticket'
-            )
+            );
           "
         />
       </b-table-column>
@@ -104,7 +113,8 @@
         field="termination"
         label="Termination Ticket"
         v-slot="props"
-        width="50" centered
+        width="50"
+        centered
       >
         {{
           showTerminationTicketDate(
@@ -118,7 +128,8 @@
         field="termination_status"
         label="Termination Ticket Opened"
         v-slot="props"
-        width="50" centered
+        width="50"
+        centered
       >
         <b-checkbox
           v-model="props.row.ticketsstatus.terminationticket"
@@ -133,7 +144,13 @@
           "
         />
       </b-table-column>
-      <b-table-column field="notes" label="Notes" v-slot="props" width="250" centered>
+      <b-table-column
+        field="notes"
+        label="Notes"
+        v-slot="props"
+        width="250"
+        centered
+      >
         <b-input
           v-model="props.row.ticketsstatus.notes"
           @input="
@@ -222,13 +239,11 @@ export default defineComponent({
     this.loadData();
   },
   data() {
-    return {
-    };
+    return {};
   },
 });
 </script>
 <style>
-
 .is-empty {
   text-align: center;
 }

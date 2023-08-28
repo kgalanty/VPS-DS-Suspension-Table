@@ -9,7 +9,7 @@ class Service extends Model
     public $timestamps = false;
     protected $table = 'tblhosting';
     protected $visible = ['id', 'ticketsstatus', 'domainstatus', 'userid', 'packageid', 'server', 'regdate', 'domain', 'nextduedate', 'termination_date', 'notes','dedicatedip', 'product', 'client'];
-    protected $casts = [
+        protected $casts = [
         'ticketsstatus' => 'array',
     ];
     protected $hidden = [
@@ -19,6 +19,11 @@ class Service extends Model
         // 'secure',
         // 'port',
     ];
+
+    public function getTicketsStatusAttribute($value)
+    {
+        return (array)$value;
+    }
     public function product()
     {
         return $this->belongsTo('\WHMCS\Module\Addon\VPSDSSuspensionTable\app\Models\Product', 'packageid', 'id');
