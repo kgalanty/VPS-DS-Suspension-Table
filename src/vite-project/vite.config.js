@@ -1,6 +1,19 @@
 import vue from '@vitejs/plugin-vue2'
 import path from "path";
 
+const htmlPlugin = () => {
+  return {
+    name: 'html-transform',
+    transformIndexHtml(html) {
+      return html.replace(
+        /<title>(.*?)<\/title>/,
+        `<title>VPS/DS Suspension Table</title>`
+      )
+    },
+
+  }
+}
+
 export default {
   resolve: {
     alias: {
@@ -9,6 +22,7 @@ export default {
   },
   plugins: [
     vue(),
+    htmlPlugin()
     // Custom inline Vite plugin
     // Using Vite's transformIndexHtml() hook, for certain env flag, we overwrite index.html's content with another file.
     // {
@@ -25,7 +39,7 @@ export default {
     proxy: {
       '/addonmodules.php': {
         target: 'https://ticketing.stage.tmdhosting.com/admin/',
-        headers: { cookie: 'WHMCSBaCqM4Y33YVw=s84v7feak9itd41uled2fhrekh' },
+        headers: { cookie: 'WHMCSBaCqM4Y33YVw=q0jhrmfttts3sj7vs3de6nv18p' },
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
         secure: false,
