@@ -33,9 +33,7 @@
     >
       <template #empty style="text-align: center">
         <span v-if="loading === false">
-          <p class="empty">
-            No entries for given criteria.
-          </p>
+          <p class="empty">No entries for given criteria.</p>
         </span>
         <b-message type="is-info" has-icon v-if="loading">
           Loading data...
@@ -105,7 +103,7 @@
               props.row.id,
               props.row.ticketsstatus.suspensionticket,
               'suspensionticket'
-            );
+            )
           "
         />
       </b-table-column>
@@ -165,6 +163,16 @@
           type="textarea"
         ></b-input>
       </b-table-column>
+      <b-table-column label="Actions" v-slot="props" width="50">
+        <b-button
+              label="Open Ticket"
+              type="is-primary"
+              size="is-small"
+              aria-controls="contentIdForA11y1"
+              :aria-expanded="props.open"
+              @click="openTicketModal(props.row.id, props.row.userid)"
+            />
+      </b-table-column>
     </b-table>
   </article>
 </template>
@@ -180,10 +188,11 @@ import {
   OnTablePageChange,
 } from "../../helpers/tickets";
 import DomainStatus from "../DomainStatus.vue";
+import ChooseTemplateModal from "../Modals/ChooseTemplateModal.vue";
 
 export default defineComponent({
   name: "SuspensionTable",
-  components: { DomainStatus },
+  components: { DomainStatus, ChooseTemplateModal },
   created() {},
   computed: {
     ...mapState("vpsds", ["services", "total", "loading"]),
@@ -206,6 +215,15 @@ export default defineComponent({
   methods: {
     ...mapActions("vpsds", ["loadData"]),
 
+    openTicketModal(hid, uid) {
+      this.$buefy.modal.open({
+        parent: this,
+        component: ChooseTemplateModal,
+        hasModalCard: true,
+        trapFocus: true,
+        props: { hid, uid },
+      });
+    },
     addDays(date, days) {
       return addDays(date, days);
     },
@@ -247,14 +265,17 @@ export default defineComponent({
 .is-empty {
   text-align: center;
 }
+
 .extrapointscolumn,
 .cellcenter {
   display: block;
   text-align: center;
 }
+
 .centernoblock {
   text-align: center;
 }
+
 .emailTable {
   overflow-wrap: anywhere !important;
   word-wrap: anywhere !important;
@@ -264,24 +285,30 @@ export default defineComponent({
 #chatlisttable .table {
   border-collapse: collapse !important;
 }
+
 #chatlisttable .table td {
   border: 1px solid rgb(255, 255, 255);
   margin: 3px;
 }
+
 #chatlisttable th span {
   margin: 0 auto;
   text-align: center;
 }
+
 #chatlisttable th {
   border: 0;
 }
+
 .table {
   overflow: hidden;
 }
+
 .btable {
   font-size: 0.9rem;
   padding: -20px;
 }
+
 .btable th {
   background: white;
   font-size: 0.6rem;

@@ -28,23 +28,23 @@ const TicketsTpl = {
         setLoading(state, loading) {
             state.loading = loading
         },
-        setDate(state, date) { 
+        setDate(state, date) {
             state.date = date
         }
     },
     actions:
     {
-        loadSingle(context, tplid){
+        loadSingle(context, tplid) {
             return new Promise((resolve, reject) => {
 
                 const params = useRequestGenerator('Tickets', [`id=${tplid}`
                 ])
 
-                 axios
+                axios
                     .get(params)
                     .then((response) => {
                         if (response.data) {
-                            let data =  response.data.data
+                            let data = response.data.data
                             context.commit('setTemplate', data)
                             resolve()
                         }
@@ -60,21 +60,20 @@ const TicketsTpl = {
 
             })
         },
-        delete(context, tplid)
-        {
+        delete(context, tplid) {
             return new Promise((resolve, reject) => {
                 context.commit('setLoading', true) //run loading
 
                 const params = useRequestGenerator('Tickets', [`action=delete`])
 
                 axios
-                    .post(params, {id: tplid})
+                    .post(params, { id: tplid })
                     .then((response) => {
                         if (response.data) {
-                            let data =  response.data.data
+                            let data = response.data.data
                             console.log(data)
                             context.commit('setTemplates', data)
-                            
+
                             context.commit('setLoading', false)
                             resolve()
                         }
@@ -90,19 +89,17 @@ const TicketsTpl = {
 
             })
         },
-        loadData(context)
-        {
+        loadData(context, payload = {}) {
             return new Promise((resolve, reject) => {
                 context.commit('setLoading', true) //run loading
 
-                const params = useRequestGenerator('Tickets', [`page=${context.state.page}`
-                ])
+                const params = 'getall' in payload ? useRequestGenerator('Tickets', [`getall=1`]) : useRequestGenerator('Tickets', [`page=${context.state.page}`])
 
                 axios
                     .get(params)
                     .then((response) => {
                         if (response.data) {
-                            let data =  response.data.data
+                            let data = response.data.data
                             console.log(data)
                             context.commit('setTemplates', data)
                             context.commit('setTotal', response.data.total)
@@ -123,7 +120,6 @@ const TicketsTpl = {
             })
         },
         save(context, payload) {
-            console.log(payload)
             return new Promise((resolve, reject) => {
                 context.commit('setLoading', true) //run loading
 
@@ -136,8 +132,6 @@ const TicketsTpl = {
                             context.commit('setLoading', false)
                             resolve()
                         }
-
-
                     })
                     .catch(() => {
                         context.commit('setLoading', false)

@@ -12,7 +12,7 @@ class Tickets extends API
     public function post()
     {
         if ($this->input['action'] === 'delete') {
-            $id = (int)$this->body['id'];
+            $id = (int) $this->body['id'];
             if (!$id) {
                 return ['error' => 'No id received'];
             }
@@ -29,7 +29,7 @@ class Tickets extends API
         $name = trim($this->body['name']);
         $title = trim($this->body['title']);
         $content = trim($this->body['content']);
-        $id = (int)$this->body['id'];
+        $id = (int) $this->body['id'];
 
         if (!$name || !$title || !$content) {
             return ['error' => 'Not all required fields were filled'];
@@ -51,18 +51,24 @@ class Tickets extends API
     public function get()
     {
         if ($this->input['id']) {
-            $tpl = TicketTpl::find((int)$this->input['id']);
+            $tpl = TicketTpl::find((int) $this->input['id']);
             return ['data' => $tpl];
         }
-        
+
         $perpage = 20;
         $page = $this->input['page'] == 1 ? 0 : ($this->input['page'] - 1) * $perpage;
 
         $total = TicketTpl::count();
-        $data = TicketTpl::skip((int)$page)
-            ->take((int)$perpage)
-            ->orderBy('name', 'asc')
-            ->get();
+        if ($_GET['getall']) {
+            $data = TicketTpl::
+                orderBy('name', 'asc')
+                ->get();
+        } else {
+            $data = TicketTpl::skip((int) $page)
+                ->take((int) $perpage)
+                ->orderBy('name', 'asc')
+                ->get();
+        }
         return ['total' => $total, 'data' => $data];
     }
 }
