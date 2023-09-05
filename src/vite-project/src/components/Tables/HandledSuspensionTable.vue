@@ -200,6 +200,15 @@
         ></b-input>
         <!-- <b-button type="is-primary" outlined icon-right="pencil" /> -->
       </b-table-column>
+      <b-table-column label="Actions" v-slot="props" width="50">
+        <b-button
+              label="Open Ticket"
+              type="is-primary"
+              size="is-small"
+              :aria-expanded="props.open"
+              @click="openTicketModal(props.row.id, props.row.userid)"
+            />
+      </b-table-column>
     </b-table>
   </article>
 </template>
@@ -215,6 +224,7 @@ import {
   OnTablePageChange,
 } from "../../helpers/tickets";
 import DomainStatus from "../DomainStatus.vue";
+import { openTicketModal } from '../../helpers/modals'
 
 export default defineComponent({
   name: "HandledSuspensionTable",
@@ -263,6 +273,10 @@ export default defineComponent({
         "_blank"
       );
     },
+    openTicketModal(hid, uid)
+    {
+      openTicketModal(hid, uid, this)
+    }
   },
   mounted() {
     this.loadData();

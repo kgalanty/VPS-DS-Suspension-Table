@@ -94,6 +94,7 @@ const TicketsTpl = {
                 context.commit('setLoading', true) //run loading
 
                 const params = 'getall' in payload ? useRequestGenerator('Tickets', [`getall=1`]) : useRequestGenerator('Tickets', [`page=${context.state.page}`])
+                console.log(params)
 
                 axios
                     .get(params)

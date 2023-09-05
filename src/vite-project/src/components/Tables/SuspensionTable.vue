@@ -163,16 +163,7 @@
           type="textarea"
         ></b-input>
       </b-table-column>
-      <b-table-column label="Actions" v-slot="props" width="50">
-        <b-button
-              label="Open Ticket"
-              type="is-primary"
-              size="is-small"
-              aria-controls="contentIdForA11y1"
-              :aria-expanded="props.open"
-              @click="openTicketModal(props.row.id, props.row.userid)"
-            />
-      </b-table-column>
+
     </b-table>
   </article>
 </template>
@@ -188,11 +179,10 @@ import {
   OnTablePageChange,
 } from "../../helpers/tickets";
 import DomainStatus from "../DomainStatus.vue";
-import ChooseTemplateModal from "../Modals/ChooseTemplateModal.vue";
 
 export default defineComponent({
   name: "SuspensionTable",
-  components: { DomainStatus, ChooseTemplateModal },
+  components: { DomainStatus },
   created() {},
   computed: {
     ...mapState("vpsds", ["services", "total", "loading"]),
@@ -215,15 +205,6 @@ export default defineComponent({
   methods: {
     ...mapActions("vpsds", ["loadData"]),
 
-    openTicketModal(hid, uid) {
-      this.$buefy.modal.open({
-        parent: this,
-        component: ChooseTemplateModal,
-        hasModalCard: true,
-        trapFocus: true,
-        props: { hid, uid },
-      });
-    },
     addDays(date, days) {
       return addDays(date, days);
     },
