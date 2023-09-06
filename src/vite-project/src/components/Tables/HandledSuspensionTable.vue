@@ -25,6 +25,7 @@
       :per-page="20"
       :loading="this.loading"
       :row-class="colorRows"
+      @sort="onSort"
     >
       <template #detail="props">
         <div class="columns is-mobile is-centered is-vcentered">
@@ -114,14 +115,9 @@
         v-slot="props"
         width="50"
         centered
+        sortable
       >
-        {{
-          showSuspensionTicketDate(
-            props.row.nextduedate,
-            props.row.client.datecreated,
-            1
-          )
-        }}
+        {{ formatDateShort(props.row.ticketsstatus.suspensionticketdate) }}
       </b-table-column>
       <b-table-column
         field="suspension_status"
@@ -149,14 +145,9 @@
         v-slot="props"
         centered
         width="100"
+        sortable
       >
-        {{
-          showTerminationTicketDate(
-            props.row.nextduedate,
-            props.row.client.datecreated,
-            1
-          )
-        }}
+        {{ formatDateShort(props.row.ticketsstatus.terminationticketdate) }}
       </b-table-column>
       <b-table-column
         field="termination_status"
@@ -202,12 +193,12 @@
       </b-table-column>
       <b-table-column label="Actions" v-slot="props" width="50">
         <b-button
-              label="Open Ticket"
-              type="is-primary"
-              size="is-small"
-              :aria-expanded="props.open"
-              @click="openTicketModal(props.row.id, props.row.userid)"
-            />
+          label="Open Ticket"
+          type="is-primary"
+          size="is-small"
+          :aria-expanded="props.open"
+          @click="openTicketModal(props.row.id, props.row.userid)"
+        />
       </b-table-column>
     </b-table>
   </article>
@@ -216,22 +207,33 @@
 <script>
 import { defineComponent } from "vue";
 import { mapState, mapActions } from "vuex";
-import { addDays, currentDateTime } from "../../helpers/formatDate.js";
+import {
+  addDays,
+  currentDateTime,
+  formatDateShort,
+} from "../../helpers/formatDate.js";
 import {
   showSuspensionTicketDate,
   showTerminationTicketDate,
   setTicketStatus,
   OnTablePageChange,
+  OnTableSorting,
 } from "../../helpers/tickets";
 import DomainStatus from "../DomainStatus.vue";
-import { openTicketModal } from '../../helpers/modals'
+import { openTicketModal } from "../../helpers/modals";
 
 export default defineComponent({
   name: "HandledSuspensionTable",
   components: { DomainStatus },
   created() {},
   computed: {
-    ...mapState("hvpsds", ["services", "total", "loading"]),
+    ...mapState("hvpsds", [
+      "services",
+      "total",
+      "loading",
+      "sorting_field",
+      "sorting_order",
+    ]),
     date: {
       get() {
         return this.$store.state.vpsds.date;
@@ -267,16 +269,19 @@ export default defineComponent({
       OnTablePageChange(page);
       this.loadData();
     },
+    onSort(field, order) {
+      OnTableSorting(field, order);
+      this.loadData();
+    },
     openService(id) {
       window.open(
         "https://my.tmdhosting.com/admin/clientsservices.php?id=" + id,
         "_blank"
       );
     },
-    openTicketModal(hid, uid)
-    {
-      openTicketModal(hid, uid, this)
-    }
+    openTicketModal(hid, uid) {
+      openTicketModal(hid, uid, this);
+    },
   },
   mounted() {
     this.loadData();

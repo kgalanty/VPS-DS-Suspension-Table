@@ -38,8 +38,8 @@ export default {
   server: {
     proxy: {
       '/addonmodules.php': {
-        target: 'https://my.tmdhosting.com/admin/',
-        headers: { cookie: 'WHMCSBaCqM4Y33YVw=l7irn8m8re908f1pleb8dij9b3' },
+        target: 'https://dev.tmd-clientarea2023.info/admin/',
+        headers: { cookie: 'WHMCSBaCqM4Y33YVw=sg0he6bj8gii237c96usonn81j' },
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
         secure: false,

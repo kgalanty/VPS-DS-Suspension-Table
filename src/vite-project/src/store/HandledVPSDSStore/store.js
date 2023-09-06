@@ -10,6 +10,8 @@ const VPSDSStore = {
         page: 1,
         date: new Date(),
         total: 0,
+        sorting_field: '',
+        sorting_order: '',
     }),
     getters:
     {
@@ -30,7 +32,15 @@ const VPSDSStore = {
         },
         setPage(state, page) { 
             state.page = page
-        }
+        },
+        setSortingField(state, val)
+        {
+            state.sorting_field = val
+        },
+        setSortingOrder(state, val)
+        {
+            state.sorting_order = val
+        },
     },
     actions:
     {
@@ -45,7 +55,7 @@ const VPSDSStore = {
                 context.commit('setLoading', true) //run loading
 
                 const params = useRequestGenerator('ServerList', [`page=${context.state.page}`, `withtickets=1`
-                ])
+                , `sort=${context.state.sorting_field}`, `orderBy=${context.state.sorting_order}`])
 
                 axios
                     .get(params)

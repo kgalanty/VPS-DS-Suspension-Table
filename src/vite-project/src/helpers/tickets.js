@@ -37,4 +37,9 @@ export function setTicketStatus(serviceid, val, column) {
 
 export function OnTablePageChange(page) {
     store.commit("hvpsds/setPage", page);
-  }
+}
+
+export function OnTableSorting(field, order) {
+    store.commit('hvpsds/setSortingField', field)
+    store.commit('hvpsds/setSortingOrder', order)
+}
