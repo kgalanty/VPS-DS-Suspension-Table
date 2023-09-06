@@ -10,7 +10,6 @@ export function formatDateShort(dateObj) {
     let date = new Date(dateObj);
     const month = date.getMonth() + 1;
     const dateFormatted = date.getDate() + '/' + (month<10 ? "0"+month : month)
-
     return dateFormatted
 }
 

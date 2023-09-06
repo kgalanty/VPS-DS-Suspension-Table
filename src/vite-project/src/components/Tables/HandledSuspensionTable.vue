@@ -110,7 +110,7 @@
         /></b-tooltip>
       </b-table-column>
       <b-table-column
-        field="suspension_ticket"
+        field="suspensionticketdate"
         label="Suspension Ticket"
         v-slot="props"
         width="50"
@@ -140,7 +140,7 @@
         />
       </b-table-column>
       <b-table-column
-        field="termination"
+        field="terminationticketdate"
         label="Termination Ticket"
         v-slot="props"
         centered
@@ -282,6 +282,10 @@ export default defineComponent({
     openTicketModal(hid, uid) {
       openTicketModal(hid, uid, this);
     },
+    formatDateShort(date)
+    {
+      return formatDateShort(date)
+    }
   },
   mounted() {
     this.loadData();
