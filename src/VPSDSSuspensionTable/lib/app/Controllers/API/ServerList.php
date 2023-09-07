@@ -39,7 +39,6 @@ class ServerList extends API
         $data = $query
             ->skip((int) $page)
             ->take((int) $perpage)
-            ->orderBy($sort, $order)
             ->get();
         
         if ($order == 'asc') {
