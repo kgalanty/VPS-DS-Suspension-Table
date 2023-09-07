@@ -21,7 +21,7 @@ class ServerList extends API
             $order = 'desc';
         }
 
-        $query = Service::with(['client', 'product', 'ticketsstatus'])->server()->reorder($sort,$order);
+        $query = Service::with(['client', 'product', 'ticketsstatus'])->server();
 
         if ($this->input['withtickets']) {
             $query = $query->has('ticketsstatus');
@@ -41,6 +41,13 @@ class ServerList extends API
             ->take((int) $perpage)
             ->orderBy($sort, $order)
             ->get();
+        
+        if ($order == 'asc') {
+            $data = $data->sortBy($sort);
+        } elseif ($order == 'desc') {
+            $data = $data->sortByDesc($sort);
+        }
+
         return ['total' => $total, 'data' => $data];
     }
 }
