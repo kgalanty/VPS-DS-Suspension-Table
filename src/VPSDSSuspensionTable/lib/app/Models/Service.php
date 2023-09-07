@@ -39,7 +39,10 @@ class Service extends Model
     {
         return $this->belongsTo('\WHMCS\Module\Addon\VPSDSSuspensionTable\app\Models\Client', 'userid', 'id');
     }
-
+    public function scopeReorder($query, $sort, $order)
+    {
+        return $query->orderBy($sort, $order);
+    }
     public function scopeServer($query)
     {
         return $query->whereHas('product', function ($q) {

@@ -21,14 +21,7 @@ class ServerList extends API
             $order = 'desc';
         }
 
-        $query = Service::with(['client', 'product', 'ticketsstatus' => function($query) use ($sort, $order)
-        {
-            if(strpos($sort, '.') !== false)
-            {
-                $query->orderBy($sort, $order);
-            }
-            
-        }])->server();
+        $query = Service::with(['client', 'product', 'ticketsstatus'])->server()->reorder($sort,$order);
 
         if ($this->input['withtickets']) {
             $query = $query->has('ticketsstatus');
