@@ -17,7 +17,7 @@ class ServerList extends API
             $sort = trim($this->input['sort']);
             $order = trim($this->input['orderBy']);
         } else {
-            $sort = 'id';
+            $sort = 'tblhosting.id';
             $order = 'desc';
         }
 
@@ -44,7 +44,7 @@ class ServerList extends API
             ->skip((int) $page)
             ->take((int) $perpage)
             ->orderBy($sort, $order)
-            ->get(['tblhosting.*', 'vpsds_tickets_status.* as ticketsstatus']);
+            ->get(['tblhosting.*', 'vpsds_tickets_status.*']);
         
         return ['total' => $total, 'data' => $data];
     }
