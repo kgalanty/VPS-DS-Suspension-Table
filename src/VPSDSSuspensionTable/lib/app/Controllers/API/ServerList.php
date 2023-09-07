@@ -38,7 +38,8 @@ class ServerList extends API
             ->skip((int) $page)
             ->take((int) $perpage)
             ->orderBy($sort, $order)
-            ->get();
+            ->get()
+            ->sortBy('room_category.name',SORT_REGULAR, $order === 'desc' ? true : false);
         return ['total' => $total, 'data' => $data];
     }
 }
