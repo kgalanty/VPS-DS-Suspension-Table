@@ -21,7 +21,7 @@ class ServerList extends API
             // $table = count($sorting) > 1 ? $sorting[0] : '';
             // $field = count($sorting) > 1 ? $sorting[1] : $sort;
         } else {
-            $sort = 'id';
+            $sort = 'tblhosting.id';
             $order = 'desc';
         }
 
