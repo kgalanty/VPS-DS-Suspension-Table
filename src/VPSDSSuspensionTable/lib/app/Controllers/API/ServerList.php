@@ -13,23 +13,8 @@ class ServerList extends API
         $perpage = 20;
         $page = $this->input['page'] == 1 ? 0 : ($this->input['page'] - 1) * $perpage;
 
-        if ($this->input['sort'] && $this->input['orderBy']) {
-            $sort = str_replace(['ticketsstatus'], ['vpsds_tickets_status'], trim($this->input['sort']));
-            $order = trim($this->input['orderBy']);
+        $query = Service::with(['client', 'product', 'ticketsstatus'])->server();
 
-            // $sorting = explode('.', $sort);
-            // $table = count($sorting) > 1 ? $sorting[0] : '';
-            // $field = count($sorting) > 1 ? $sorting[1] : $sort;
-        } else {
-            $sort = 'tblhosting.id';
-            $order = 'desc';
-        }
-
-        $query = Service::with(['product', 'ticketsstatus'])
-            ->server()
-            ->join('vpsds_tickets_status', 'vpsds_tickets_status.serviceid', '=', 'tblhosting.id')
-            ->join('tblclients', 'tblclients.id', '=', 'tblhosting.userid');
-        
         if ($this->input['withtickets']) {
             $query = $query->has('ticketsstatus');
         } else {
@@ -41,12 +26,19 @@ class ServerList extends API
         }
         $total = $query->count();
 
+        if ($this->input['sort'] && $this->input['orderBy']) {
+            $sort = trim($this->input['sort']);
+            $order = trim($this->input['orderBy']);
+        } else {
+            $sort = 'id';
+            $order = 'desc';
+        }
+
         $data = $query
             ->skip((int) $page)
             ->take((int) $perpage)
             ->orderBy($sort, $order)
-            ->get(['tblclients.*', 'vpsds_tickets_status.*']);
-
+            ->get();
         return ['total' => $total, 'data' => $data];
     }
 }
