@@ -44,8 +44,8 @@ class ServerList extends API
             ->skip((int) $page)
             ->take((int) $perpage)
             ->orderBy($sort, $order)
-            ->get();
+            ->get(['tblhosting.*', 'vpsds_tickets_status.* as ticketsstatus']);
         
-        return ['total' => $total, 'data' => (array)$data];
+        return ['total' => $total, 'data' => $data];
     }
 }

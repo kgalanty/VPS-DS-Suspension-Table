@@ -110,7 +110,7 @@
         /></b-tooltip>
       </b-table-column>
       <b-table-column
-        field="ticketsstatus.suspensionticketdate"
+        field="suspensionticketdate"
         label="Suspension Ticket"
         v-slot="props"
         width="50"
@@ -140,7 +140,7 @@
         />
       </b-table-column>
       <b-table-column
-        field="ticketsstatus.terminationticketdate"
+        field="terminationticketdate"
         label="Termination Ticket"
         v-slot="props"
         centered
