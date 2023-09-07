@@ -25,7 +25,7 @@ class ServerList extends API
         ->join('vpsds_tickets_status', function($join)
         {
             $join->on('vpsds_tickets_status.serviceid', '=', 'tblhosting.id');
-            $join->on('vpsds_tickets_status.deleted_at', '=', null);
+            $join->whereNull('vpsds_tickets_status.deleted_at');
         })
         ->server();
 
