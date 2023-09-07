@@ -14,7 +14,7 @@ class ServerList extends API
         $page = $this->input['page'] == 1 ? 0 : ($this->input['page'] - 1) * $perpage;
 
         if ($this->input['sort'] && $this->input['orderBy']) {
-            $sort = trim($this->input['sort']);
+            $sort = str_replace(['ticketsstatus'], ['vpsds_tickets_status'], trim($this->input['sort']));
             $order = trim($this->input['orderBy']);
 
             // $sorting = explode('.', $sort);
@@ -27,7 +27,7 @@ class ServerList extends API
 
         $query = Service::with(['client', 'product', 'ticketsstatus'])
             ->server()
-            ->join('vpsds_tickets_status', 'vpsds_tickets_status.serviceid', '=', 'tblhosting.id');
+            ->join('vpsds_tickets_status', 'vpsds_tickets_status.serviceid', '=', 'tblhosting.id')->select('vpsds_tickets_status.*');
         
         if ($this->input['withtickets']) {
             $query = $query->has('ticketsstatus');
