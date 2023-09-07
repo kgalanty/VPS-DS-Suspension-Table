@@ -17,22 +17,18 @@ class ServerList extends API
             $sort = trim($this->input['sort']);
             $order = trim($this->input['orderBy']);
 
-            $sorting = explode('.', $sort);
-            $table = count($sorting) > 1 ? $sorting[0] : '';
-            $field = count($sorting) > 1 ? $sorting[1] : $sort;
+            // $sorting = explode('.', $sort);
+            // $table = count($sorting) > 1 ? $sorting[0] : '';
+            // $field = count($sorting) > 1 ? $sorting[1] : $sort;
         } else {
             $sort = 'id';
             $order = 'desc';
         }
 
-        $query = Service::with(['client', 'product', 'ticketsstatus' => function($query) use($table, $field, $order)
-        {
-            if($table === 'ticketsstatus')
-            {
-                $query->orderBy($field, $order);
-            }
-        }])->server();
-
+        $query = Service::with(['client', 'product', 'ticketsstatus'])
+            ->server()
+            ->join('vpsds_tickets_status', 'vpsds_tickets_status.serviceid', '=', 'tblhosting.id');
+        
         if ($this->input['withtickets']) {
             $query = $query->has('ticketsstatus');
         } else {
@@ -47,6 +43,7 @@ class ServerList extends API
         $data = $query
             ->skip((int) $page)
             ->take((int) $perpage)
+            ->orderBy($sort, $order)
             ->get();
 
         return ['total' => $total, 'data' => $data];
