@@ -13,7 +13,22 @@ class ServerList extends API
         $perpage = 20;
         $page = $this->input['page'] == 1 ? 0 : ($this->input['page'] - 1) * $perpage;
 
-        $query = Service::with(['client', 'product', 'ticketsstatus'])->server();
+        if ($this->input['sort'] && $this->input['orderBy']) {
+            $sort = trim($this->input['sort']);
+            $order = trim($this->input['orderBy']);
+        } else {
+            $sort = 'id';
+            $order = 'desc';
+        }
+
+        $query = Service::with(['client', 'product', 'ticketsstatus' => function($query) use ($sort, $order)
+        {
+            if(strpos($sort, '.') !== false)
+            {
+                $query->orderBy($sort, $order);
+            }
+            
+        }])->server();
 
         if ($this->input['withtickets']) {
             $query = $query->has('ticketsstatus');
@@ -26,20 +41,13 @@ class ServerList extends API
         }
         $total = $query->count();
 
-        if ($this->input['sort'] && $this->input['orderBy']) {
-            $sort = trim($this->input['sort']);
-            $order = trim($this->input['orderBy']);
-        } else {
-            $sort = 'id';
-            $order = 'desc';
-        }
+
 
         $data = $query
             ->skip((int) $page)
             ->take((int) $perpage)
             ->orderBy($sort, $order)
-            ->get()
-            ->sortBy('room_category.name',SORT_REGULAR, $order === 'desc' ? true : false);
+            ->get();
         return ['total' => $total, 'data' => $data];
     }
 }
