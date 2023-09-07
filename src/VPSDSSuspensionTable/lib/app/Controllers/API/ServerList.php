@@ -22,10 +22,10 @@ class ServerList extends API
         }
 
         $query = Service::with(['client', 'product', 'ticketsstatus'])
-        ->join('vpsds_tickets_status', function($join)
+        ->join('vpsds_tickets_status v', function($join)
         {
-            $join->on('vpsds_tickets_status.serviceid', '=', 'tblhosting.id');
-            $join->whereNull('vpsds_tickets_status.deleted_at');
+            $join->on('v.serviceid', '=', 'tblhosting.id');
+            $join->whereNull('v.deleted_at');
         })
         ->server();
 
@@ -44,7 +44,7 @@ class ServerList extends API
             ->skip((int) $page)
             ->take((int) $perpage)
             ->orderBy($sort, $order)
-            ->get(['tblhosting.*', 'vpsds_tickets_status.*']);
+            ->get(['tblhosting.*', 'v.*']);
         
         return ['total' => $total, 'data' => $data];
     }
