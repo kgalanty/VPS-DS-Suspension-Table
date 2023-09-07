@@ -27,7 +27,8 @@ class ServerList extends API
 
         $query = Service::with(['client', 'product', 'ticketsstatus'])
             ->server()
-            ->join('vpsds_tickets_status', 'vpsds_tickets_status.serviceid', '=', 'tblhosting.id')->select('vpsds_tickets_status.*');
+            ->join('vpsds_tickets_status', 'vpsds_tickets_status.serviceid', '=', 'tblhosting.id')
+            ->select(['tblclients.*', 'vpsds_tickets_status.*']);
         
         if ($this->input['withtickets']) {
             $query = $query->has('ticketsstatus');
