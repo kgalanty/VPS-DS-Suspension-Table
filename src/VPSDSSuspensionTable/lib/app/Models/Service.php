@@ -4,12 +4,13 @@ namespace WHMCS\Module\Addon\VPSDSSuspensionTable\app\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use WHMCS\Database\Capsule as DB;
+
 class Service extends Model
 {
     public $timestamps = false;
     protected $table = 'tblhosting';
-    protected $visible = ['id', 'ticketsstatus', 'domainstatus', 'userid', 'packageid', 'server', 'regdate', 'domain', 'nextduedate', 'termination_date', 'notes','dedicatedip', 'product', 'client'];
-        protected $casts = [
+    protected $visible = ['id', 'ticketsstatus', 'domainstatus', 'userid', 'packageid', 'server', 'regdate', 'domain', 'nextduedate', 'termination_date', 'notes', 'dedicatedip', 'product', 'client'];
+    protected $casts = [
         'ticketsstatus' => 'array',
     ];
     protected $hidden = [
@@ -22,7 +23,7 @@ class Service extends Model
 
     public function getTicketsStatusAttribute($value)
     {
-        return (array)$value;
+        return (array) $value;
     }
     public function product()
     {
@@ -41,8 +42,7 @@ class Service extends Model
 
     public function scopeServer($query)
     {
-        return $query->whereHas('product', function($q)
-        {
+        return $query->whereHas('product', function ($q) {
             $q->where('type', 'server');
         });
     }
@@ -61,12 +61,12 @@ class Service extends Model
     // {
     //     return $this->hasMany('\WHMCS\Module\Addon\LPRManager\app\Models\Hosting', 'server', 'id');
     // }
-    
+
     // public function servicesActive()
     // {
     //     return $this->hasMany('\WHMCS\Module\Addon\LPRManager\app\Models\Hosting', 'server', 'id')->where('domainstatus', 'Active');
     // }
-        
+
     // public function servicesSuspended()
     // {
     //     return $this->hasMany('\WHMCS\Module\Addon\LPRManager\app\Models\Hosting', 'server', 'id')->where('domainstatus', 'Suspended');
