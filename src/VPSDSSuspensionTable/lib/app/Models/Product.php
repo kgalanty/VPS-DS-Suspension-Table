@@ -15,6 +15,7 @@ class Product extends Model
         // 'secure',
         // 'port',
     ];
+    protected $visible = ['id', 'type', 'gid', 'name', 'description', 'hidden'];
 
     // public function scopeID($query, $serverid)
     // {

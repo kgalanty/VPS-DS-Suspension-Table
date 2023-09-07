@@ -16,14 +16,21 @@ class ServerList extends API
         if ($this->input['sort'] && $this->input['orderBy']) {
             $sort = trim($this->input['sort']);
             $order = trim($this->input['orderBy']);
+
+            $sorting = explode('.', $sort);
+            $table = count($sorting) > 1 ? $sorting[0] : '';
+            $field = count($sorting) > 1 ? $sorting[1] : $sort;
         } else {
             $sort = 'id';
             $order = 'desc';
         }
-        
-        $query = Service::with(['client', 'product', 'ticketsstatus' => function($query) use($sort, $order)
+
+        $query = Service::with(['client', 'product', 'ticketsstatus' => function($query) use($table, $field, $order)
         {
-            $query->orderBy($sort, $order);
+            if($table === 'ticketsstatus')
+            {
+                $query->orderBy($field, $order);
+            }
         }])->server();
 
         if ($this->input['withtickets']) {
@@ -36,8 +43,6 @@ class ServerList extends API
             $query = $query->dueDate($this->input['date']);
         }
         $total = $query->count();
-
-
 
         $data = $query
             ->skip((int) $page)
