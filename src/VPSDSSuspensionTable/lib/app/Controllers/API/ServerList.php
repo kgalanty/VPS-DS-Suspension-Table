@@ -21,7 +21,13 @@ class ServerList extends API
             $order = 'desc';
         }
 
-        $query = Service::with(['client', 'product', 'ticketsstatus'])->server();
+        $query = Service::with(['client', 'product', 'ticketsstatus'])
+        ->join('vpsds_tickets_status', function($join)
+        {
+            $join->on('vpsds_tickets_status.serviceid', '=', 'tblhosting.id');
+            $join->on('vpsds_tickets_status.deleted_at', '=', null);
+        })
+        ->server();
 
         if ($this->input['withtickets']) {
             $query = $query->has('ticketsstatus');
@@ -34,19 +40,12 @@ class ServerList extends API
         }
         $total = $query->count();
 
-
-
         $data = $query
             ->skip((int) $page)
             ->take((int) $perpage)
+            ->orderBy($sort, $order)
             ->get();
         
-        if ($order == 'asc') {
-            $data = $data->sortBy($sort);
-        } elseif ($order == 'desc') {
-            $data = $data->sortByDesc($sort);
-        }
-
-        return ['total' => $total, 'data' => $data];
+        return ['total' => $total, 'data' => (array)$data];
     }
 }

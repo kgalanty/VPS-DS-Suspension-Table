@@ -39,7 +39,7 @@ export default {
     proxy: {
       '/addonmodules.php': {
         target: 'https://dev.tmd-clientarea2023.info/admin/',
-        headers: { cookie: 'WHMCSBaCqM4Y33YVw=5pkun1haua4uvbenfgkp0fkkou' },
+        headers: { cookie: 'WHMCSBaCqM4Y33YVw=sbe2s69455vhdoflpsdur3q9nq' },
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
         secure: false,

@@ -62,6 +62,7 @@ const VPSDSStore = {
                     .then((response) => {
                         if (response.data) {
                             let data =  response.data.data
+                            
                             data.forEach((item, index) => {
                                 if (!data[index].ticketsstatus) {
                                     data[index].ticketsstatus =  {};
@@ -79,7 +80,8 @@ const VPSDSStore = {
 
 
                     })
-                    .catch(() => {
+                    .catch((e) => {
+                        console.log(e)
                         context.commit('setServices', [])
                         context.commit('setLoading', false)
                         reject('Failed to download data. Check if you are logged in and have permission.')
