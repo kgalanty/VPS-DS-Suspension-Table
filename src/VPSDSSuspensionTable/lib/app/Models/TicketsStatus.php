@@ -5,11 +5,12 @@ namespace WHMCS\Module\Addon\VPSDSSuspensionTable\app\Models;
 use Illuminate\Database\Eloquent\Model;
 use WHMCS\Database\Capsule as DB;
 use Illuminate\Database\Eloquent\Builder;
+
 class TicketsStatus extends Model
 {
     public $timestamps = false;
     protected $table = 'vpsds_tickets_status';
-    protected $fillable = ['serviceid', 'suspensionticketdate', 'suspensionticket', 'terminationticketdate', 'terminationticket', 'notes','color', 'deleted_at'];
+    protected $fillable = ['serviceid', 'suspensionticketdate', 'suspensionticket', 'terminationticketdate', 'terminationticket', 'notes', 'color', 'deleted_at'];
     //protected $visible = ['id', 'userid', 'packageid', 'server', 'regdate', 'domain', 'nextduedate', 'termination_date', 'notes','dedicatedip'];
     protected $hidden = [
         // 'username',
@@ -35,5 +36,9 @@ class TicketsStatus extends Model
     public function scopeNotDeleted($query)
     {
         return $query->whereNull('deleted_at');
+    }
+    public function scopeServiceToDelete($query, int $serviceid)
+    {
+        return $query->where('serviceid', $serviceid)->whereNull('deleted_at');
     }
 }
