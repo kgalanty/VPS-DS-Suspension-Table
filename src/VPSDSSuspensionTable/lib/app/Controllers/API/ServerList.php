@@ -43,7 +43,9 @@ class ServerList extends API
             ->skip((int) $page)
             ->take((int) $perpage)
             ->orderBy($sort, $order)
-            ->get(['tblhosting.*', 'v.*']);
+            ->select(['tblhosting.*', 'v.id AS vps_status','v.suspensionticketdate'
+            ,'v.suspensionticket','v.terminationticketdate', 'v.terminationticket','v.notes','v.color'])
+            ->get();
         
         return ['total' => $total, 'data' => $data];
     }
