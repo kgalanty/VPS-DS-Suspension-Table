@@ -247,8 +247,10 @@ export default defineComponent({
   methods: {
     ...mapActions("hvpsds", ["loadData", "setTicketStatus"]),
     setDeleted(serviceid) {
-      this.setTicketStatus(serviceid, currentDateTime(), "deleted_at");
-      this.loadData();
+      this.setTicketStatus(serviceid, currentDateTime(), "deleted_at").then(() =>
+      {
+        this.loadData();
+      });
     },
     colorRows(row) {
       return row.ticketsstatus ? "row-" + row.ticketsstatus.color : "row-white";
@@ -263,7 +265,7 @@ export default defineComponent({
       return showTerminationTicketDate(nextduedate, clientcreated, isvpsds);
     },
     setTicketStatus(serviceid, val, column) {
-      setTicketStatus(serviceid, val, column);
+      return setTicketStatus(serviceid, val, column);
     },
     onPageChange(page) {
       OnTablePageChange(page);

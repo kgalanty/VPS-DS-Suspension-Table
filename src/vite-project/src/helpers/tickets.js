@@ -32,7 +32,7 @@ export function showTerminationTicketDate(duedate, clientcreationdate, isvpsds) 
 }
 
 export function setTicketStatus(serviceid, val, column) {
-    store.dispatch("hvpsds/setTicketStatus", { serviceid, val, column });
+    return store.dispatch("hvpsds/setTicketStatus", { serviceid, val, column });
 }
 
 export function OnTablePageChange(page) {

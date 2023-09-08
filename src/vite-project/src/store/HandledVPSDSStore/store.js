@@ -27,51 +27,53 @@ const VPSDSStore = {
         setLoading(state, loading) {
             state.loading = loading
         },
-        setDate(state, date) { 
+        setDate(state, date) {
             state.date = date
         },
-        setPage(state, page) { 
+        setPage(state, page) {
             state.page = page
         },
-        setSortingField(state, val)
-        {
+        setSortingField(state, val) {
             state.sorting_field = val
         },
-        setSortingOrder(state, val)
-        {
+        setSortingOrder(state, val) {
             state.sorting_order = val
         },
     },
     actions:
     {
-        setTicketStatus(context, payload)
-        {
-            console.log(payload)
-            const params = useRequestGenerator('TicketsStatus',[])
-            axios.post(params, payload)
+        setTicketStatus(context, payload) {
+            return new Promise((resolve, reject) => {
+                const params = useRequestGenerator('TicketsStatus', [])
+                axios.post(params, payload).then(() => { resolve() })
+                    .catch((e) => {
+                        reject('Error in setting ticket status: ' + e)
+                        return
+                    });
+            })
         },
         loadData(context) {
             return new Promise((resolve, reject) => {
                 context.commit('setLoading', true) //run loading
 
                 const params = useRequestGenerator('ServerList', [`page=${context.state.page}`, `withtickets=1`
-                , `sort=${context.state.sorting_field}`, `orderBy=${context.state.sorting_order}`])
+                    , `sort=${context.state.sorting_field}`, `orderBy=${context.state.sorting_order}`])
 
                 axios
                     .get(params)
                     .then((response) => {
                         if (response.data) {
-                            let data =  response.data.data
-                            
+                            let data = response.data.data
+
                             data.forEach((item, index) => {
                                 if (!data[index].ticketsstatus) {
-                                    data[index].ticketsstatus =  {};
+                                    data[index].ticketsstatus = {};
                                     data[index].ticketsstatus['suspensionticket'] = false;
                                     data[index].ticketsstatus['terminationticket'] = false;
                                     data[index].ticketsstatus['color'] = 'fff';
                                     data[index].ticketsstatus['notes'] = '';
                                 }
-                              });
+                            });
                             context.commit('setServices', data)
                             context.commit('setTotal', response.data.total)
                             context.commit('setLoading', false)
