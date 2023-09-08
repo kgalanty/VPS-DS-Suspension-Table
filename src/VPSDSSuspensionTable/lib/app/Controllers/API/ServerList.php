@@ -35,7 +35,7 @@ class ServerList extends API
         $total = $query->count();
 
         $data = $query
-        ->join('vpsds_tickets_status as v', function($join)
+        ->leftJoin('vpsds_tickets_status as v', function($join)
         {
             $join->on('v.serviceid', '=', 'tblhosting.id');
             $join->whereNull('v.deleted_at');
