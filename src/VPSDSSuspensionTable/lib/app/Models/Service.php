@@ -32,7 +32,7 @@ class Service extends Model
 
     public function ticketsstatus()
     {
-        return $this->hasOne('\WHMCS\Module\Addon\VPSDSSuspensionTable\app\Models\TicketsStatus', 'serviceid', 'id');
+        return $this->hasOne('\WHMCS\Module\Addon\VPSDSSuspensionTable\app\Models\TicketsStatus', 'id', 'serviceid');
     }
 
     public function client()

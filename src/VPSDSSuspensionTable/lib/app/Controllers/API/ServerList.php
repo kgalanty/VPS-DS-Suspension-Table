@@ -21,9 +21,7 @@ class ServerList extends API
             $order = 'desc';
         }
 
-        $query = Service::with(['client', 'product', 'ticketsstatus'])
-
-        ->server();
+        $query = Service::with(['client', 'product', 'ticketsstatus'])->server();
 
         if ($this->input['withtickets']) {
             $query = $query->has('ticketsstatus');
