@@ -28,7 +28,29 @@
       @sort="onSort"
     >
       <template #detail="props">
-        <div class="columns is-mobile is-centered is-vcentered">
+        <div class="columns is-mobile is-vcentered">
+          <div class="column is-narrow">
+            <p class="bd-notification is-primary"><strong>Product</strong></p>
+          </div>
+          <div class="column is-narrow">
+            <p class="bd-notification is-primary">
+              {{ props.row.product.name }}
+            </p>
+          </div>
+        </div>
+        <div class="columns is-mobile is-vcentered">
+          <div class="column is-narrow">
+            <p class="bd-notification is-primary">
+              <strong>Client since</strong>
+            </p>
+          </div>
+          <div class="column is-narrow">
+            <p class="bd-notification is-primary">
+              {{ props.row.client.datecreated }}
+            </p>
+          </div>
+        </div>
+        <div class="columns is-mobile is-vcentered">
           <div class="column is-narrow">
             <p class="bd-notification is-primary"><strong>Color</strong></p>
           </div>
@@ -53,7 +75,7 @@
             </p>
           </div>
         </div>
-        <div class="columns is-mobile is-centered is-vcentered">
+        <div class="columns is-mobile is-vcentered">
           <div class="column is-narrow">
             <p class="bd-notification is-primary"><strong>Delete</strong></p>
           </div>
@@ -247,10 +269,11 @@ export default defineComponent({
   methods: {
     ...mapActions("hvpsds", ["loadData", "setTicketStatus"]),
     setDeleted(serviceid) {
-      this.setTicketStatus(serviceid, currentDateTime(), "deleted_at").then(() =>
-      {
-        this.loadData();
-      });
+      this.setTicketStatus(serviceid, currentDateTime(), "deleted_at").then(
+        () => {
+          this.loadData();
+        }
+      );
     },
     colorRows(row) {
       return row.ticketsstatus ? "row-" + row.ticketsstatus.color : "row-white";
@@ -284,10 +307,9 @@ export default defineComponent({
     openTicketModal(hid, uid) {
       openTicketModal(hid, uid, this);
     },
-    formatDateShort(date)
-    {
-      return formatDateShort(date)
-    }
+    formatDateShort(date) {
+      return formatDateShort(date);
+    },
   },
   mounted() {
     this.loadData();
