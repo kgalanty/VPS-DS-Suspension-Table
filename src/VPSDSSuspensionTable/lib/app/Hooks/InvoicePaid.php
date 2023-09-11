@@ -12,9 +12,12 @@ return function ($vars) {
 
 	foreach ($invoice as $item) {
 		if ($item->relid) {
-			TicketsStatus::serviceToDelete($item->relid)->update(['deleted_at' => \WHMCS\Carbon::now()->toDateTimeString()]);
+			$isThereSomethingToDelete = TicketsStatus::serviceToDelete($item->relid)->count();
+			if ($isThereSomethingToDelete > 0) {
+				TicketsStatus::serviceToDelete($item->relid)->update(['deleted_at' => \WHMCS\Carbon::now()->toDateTimeString()]);
 
-			logActivity('VPSDS marked as deleted upon invoice paid. Invoice id: ' . $vars['invoiceid'] . ', service id: ' . $item->relid);
+				logActivity('VPSDS marked as deleted upon invoice paid. Invoice id: ' . $vars['invoiceid'] . ', service id: ' . $item->relid);
+			}
 		}
 	}
 };
