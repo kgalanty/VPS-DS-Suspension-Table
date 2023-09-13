@@ -152,7 +152,7 @@
         <b-input
           v-model="props.row.ticketsstatus.notes"
           @input="
-            setTicketStatus(
+            delaySetTicketStatus(
               props.row.id,
               props.row.ticketsstatus.notes,
               'notes'
@@ -163,7 +163,6 @@
           type="textarea"
         ></b-input>
       </b-table-column>
-
     </b-table>
   </article>
 </template>
@@ -204,7 +203,9 @@ export default defineComponent({
   // },
   methods: {
     ...mapActions("vpsds", ["loadData"]),
-
+    ...mapActions({
+      loadHandledData: "hvpsds/loadData",
+    }),
     addDays(date, days) {
       return addDays(date, days);
     },
@@ -213,6 +214,18 @@ export default defineComponent({
     },
     showTerminationTicketDate(nextduedate, clientcreated, isvpsds) {
       return showTerminationTicketDate(nextduedate, clientcreated, isvpsds);
+    },
+
+    delaySetTicketStatus(serviceid, val, column) {
+      if (this.timer) {
+        clearTimeout(this.timer);
+      }
+      this.timer = setTimeout( () => {
+        setTicketStatus(serviceid, val, column).then(() => {
+          this.loadData();
+          this.loadHandledData();
+        });
+      }, 2000);
     },
     setTicketStatus(serviceid, val, column) {
       setTicketStatus(serviceid, val, column);
@@ -238,7 +251,9 @@ export default defineComponent({
     this.loadData();
   },
   data() {
-    return {};
+    return {
+      timer: null,
+    };
   },
 });
 </script>
