@@ -236,7 +236,7 @@ export default defineComponent({
     },
     openService(id) {
       window.open(
-        "https://my.tmdhosting.com/admin/clientsservices.php?id=" + id,
+        "clientsservices.php?id=" + id,
         "_blank"
       );
     },
