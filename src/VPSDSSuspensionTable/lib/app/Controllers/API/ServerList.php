@@ -42,16 +42,19 @@ class ServerList extends API
 
 
         if ($this->input['search'] != '') {
+            //Rewrite date from format 09/08 to (2023-)08-09 as stored in DB
+            $date = strpos($this->input['search'], '/') !== false ? implode("-", array_reverse(explode("/", $this->input['search']))) : $this->input['search'];
+
             $query = $query->leftJoin('tblclients as c', 'c.id', '=', 'tblhosting.userid')
-                ->where(function($query) 
+                ->where(function($query) use ($date)
                 {
                     $query->where('tblhosting.domain', 'LIKE', '%' . $this->input['search'] . '%')
                     ->orWhere('c.firstname', 'LIKE', '%' . $this->input['search'] . '%')
                     ->orWhere('c.lastname', 'LIKE', '%' . $this->input['search'] . '%')
                     ->orWhere('c.companyname', 'LIKE', '%' . $this->input['search'] . '%')
                     ->orWhere('v.notes','LIKE', '%' . $this->input['search'] .'%')
-                    ->orWhere('v.suspensionticketdate','LIKE', '%' . $this->input['search'] .'%')
-                    ->orWhere('v.terminationticketdate','LIKE', '%' . $this->input['search'] .'%');
+                    ->orWhere('v.suspensionticketdate','LIKE', '%' . $date .'%')
+                    ->orWhere('v.terminationticketdate','LIKE', '%' . $date .'%');
                 });
             $total = $query->count();
         }

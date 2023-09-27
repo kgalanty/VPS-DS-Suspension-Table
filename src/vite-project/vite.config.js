@@ -39,7 +39,7 @@ export default {
     proxy: {
       '/addonmodules.php': {
         target: 'https://ticketing.stage.tmdhosting.com/admin/',
-        headers: { cookie: 'WHMCSBaCqM4Y33YVw=4ql86944qvk2fu01kevu30ffb6' },
+        headers: { cookie: 'WHMCSBaCqM4Y33YVw=5u4dcljiu9inf6a2v2djns7mrf' },
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
         secure: false,
