@@ -47,7 +47,10 @@ export default defineComponent({
     ...mapActions("ticketstpl", ["loadData"]),
     OpenTicket()
     {
-        window.location = 'supporttickets.php?action=open&userid='+this.$attrs.uid+'&modulefrom=vpsds&hid='+this.$attrs.hid+'&tplid='+this.templateSelected
+      window.open(
+        'supporttickets.php?action=open&userid='+this.$attrs.uid+'&modulefrom=vpsds&hid='+this.$attrs.hid+'&tplid='+this.templateSelected,
+        "_blank"
+      );
     }
   },
   mounted() {

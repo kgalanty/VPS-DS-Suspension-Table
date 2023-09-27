@@ -34,19 +34,43 @@ class ServerList extends API
         }
         $total = $query->count();
 
-        $data = $query
-        ->leftJoin('vpsds_tickets_status as v', function($join)
-        {
-            $join->on('v.serviceid', '=', 'tblhosting.id');
-            $join->whereNull('v.deleted_at');
-        })
-            ->skip((int) $page)
+        $query = $query
+            ->leftJoin('vpsds_tickets_status as v', function ($join) {
+                $join->on('v.serviceid', '=', 'tblhosting.id');
+                $join->whereNull('v.deleted_at');
+            });
+
+
+        if ($this->input['search'] != '') {
+            $query = $query->leftJoin('tblclients as c', 'c.id', '=', 'tblhosting.userid')
+                ->where(function($query) 
+                {
+                    $query->where('tblhosting.domain', 'LIKE', '%' . $this->input['search'] . '%')
+                    ->orWhere('c.firstname', 'LIKE', '%' . $this->input['search'] . '%')
+                    ->orWhere('c.lastname', 'LIKE', '%' . $this->input['search'] . '%')
+                    ->orWhere('c.companyname', 'LIKE', '%' . $this->input['search'] . '%')
+                    ->orWhere('v.notes','LIKE', '%' . $this->input['search'] .'%')
+                    ->orWhere('v.suspensionticketdate','LIKE', '%' . $this->input['search'] .'%')
+                    ->orWhere('v.terminationticketdate','LIKE', '%' . $this->input['search'] .'%');
+                });
+            $total = $query->count();
+        }
+
+        $data = $query->skip((int) $page)
             ->take((int) $perpage)
             ->orderBy($sort, $order)
-            ->select(['tblhosting.*', 'v.id AS vps_status','v.suspensionticketdate'
-            ,'v.suspensionticket','v.terminationticketdate', 'v.terminationticket','v.notes','v.color'])
+            ->select([
+                'tblhosting.*',
+                'v.id AS vps_status',
+                'v.suspensionticketdate',
+                'v.suspensionticket',
+                'v.terminationticketdate',
+                'v.terminationticket',
+                'v.notes',
+                'v.color'
+            ])
             ->get();
-        
+
         return ['total' => $total, 'data' => $data];
     }
 }

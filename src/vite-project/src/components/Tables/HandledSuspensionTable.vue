@@ -8,12 +8,26 @@
     "
     class="container is-widescreen"
   >
-    <span
-      class="is-family-sans-serif"
-      style="display: flex; flex: 1; margin: 10px 0; font-size: 20px"
-    >
-      Handled services
-    </span>
+    <div class="columns">
+      <div
+        class="column is-family-sans-serif"
+        style="font-size: 20px; text-align: left; margin: 10px 0"
+      >
+        Handled services
+      </div>
+      <div class="column is-two-thirds">
+        <b-input
+          v-show="searchField"
+          v-model="searchValue"
+          placeholder="Search here"
+          @input="doSearch"
+          type="search"
+          ref="searchField"
+          icon="magnify"
+        ></b-input>
+      </div>
+    </div>
+
     <b-table
       detailed
       :total="total"
@@ -254,14 +268,14 @@ export default defineComponent({
       "total",
       "loading",
       "sorting_field",
-      "sorting_order",
+      "sorting_order"
     ]),
-    date: {
+    searchValue: {
       get() {
-        return this.$store.state.vpsds.date;
+        return this.$store.state.hvpsds.search_value;
       },
       set(val) {
-        this.$store.commit("hvpsds/setDate", val);
+        this.$store.commit("hvpsds/setSearchValue", val);
       },
     },
   },
@@ -299,10 +313,7 @@ export default defineComponent({
       this.loadData();
     },
     openService(id) {
-      window.open(
-        "clientsservices.php?id=" + id,
-        "_blank"
-      );
+      window.open("clientsservices.php?id=" + id, "_blank");
     },
     openTicketModal(hid, uid) {
       openTicketModal(hid, uid, this);
@@ -310,12 +321,34 @@ export default defineComponent({
     formatDateShort(date) {
       return formatDateShort(date);
     },
+    handleSearchBar(e) {
+      if (e.keyCode === 114 || (e.ctrlKey && e.keyCode === 70)) {
+        e.preventDefault();
+        this.searchField = !this.searchField;
+        if(this.searchField === true)
+        {
+          this.$refs.searchField.focus();
+        }
+      }
+    },
+    doSearch()
+    {
+      clearTimeout(this.searchDelayTimer);
+          this.searchDelayTimer = setTimeout(()=> {
+            this.loadData();
+          }, 1000); 
+    }
   },
+
   mounted() {
     this.loadData();
+    window.addEventListener("keydown", this.handleSearchBar);
   },
   data() {
-    return {};
+    return {
+      searchField: false,
+      searchDelayTimer: null,
+    };
   },
 });
 </script>
