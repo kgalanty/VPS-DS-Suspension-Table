@@ -10,7 +10,6 @@ class ServerList extends API
 {
     public function get()
     {
-      DB::enableQueryLog();
 
         $perpage = 20;
         $page = $this->input['page'] == 1 ? 0 : ($this->input['page'] - 1) * $perpage;
