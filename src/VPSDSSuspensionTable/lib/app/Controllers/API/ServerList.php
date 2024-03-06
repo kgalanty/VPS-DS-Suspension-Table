@@ -22,7 +22,7 @@ class ServerList extends API
             $order = 'desc';
         }
 
-        $query = Service::server();
+        $query = Service::leftJoin('tblproducts as p', 'p.id', '=', 'tblhosting.packageid');
 
         if ($this->input['withtickets']) {
             $query = $query->has('ticketsstatus');
@@ -40,7 +40,7 @@ class ServerList extends API
                 $join->on('v.serviceid', '=', 'tblhosting.id');
                 $join->whereNull('v.deleted_at');
             })->leftJoin('tblclients as c', 'c.id', '=', 'tblhosting.userid')
-            ->join('tblproducts as p', 'p.id', '=', 'tblhosting.packageid');
+          ;
 
 
         if ($this->input['search'] != '') {
@@ -66,9 +66,9 @@ class ServerList extends API
             ->orderBy($sort, $order)
             ->select([
                 'p.name AS product_name',
-                'c.firstname',
-                'c.lastname',
-                'c.datecreated',
+                'c.firstname AS client_firstname',
+                'c.lastname AS client_lastname',
+                'c.datecreated AS client_datecreated',
                 'tblhosting.*',
                 'v.id AS vps_status',
                 'v.suspensionticketdate',
@@ -79,7 +79,7 @@ class ServerList extends API
                 'v.color'
             ])
             ->get();
-  
+
         return ['total' => $total, 'data' => $data];
     }
 }
