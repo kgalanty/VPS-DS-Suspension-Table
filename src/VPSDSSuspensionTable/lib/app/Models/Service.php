@@ -9,7 +9,7 @@ class Service extends Model
 {
     public $timestamps = false;
     protected $table = 'tblhosting';
-    protected $visible = ['id', 'ticketsstatus', 'domainstatus', 'userid', 'packageid', 'server', 'regdate', 'domain', 'nextduedate', 'termination_date', 'notes', 'dedicatedip', 'product', 'client'];
+    protected $visible = ['id', 'ticketsstatus', 'domainstatus', 'userid', 'packageid', 'server', 'regdate', 'domain', 'nextduedate', 'termination_date', 'notes', 'dedicatedip', 'product', 'client_firstname', 'client_lastname', 'product_name', 'client_datecreated']
     protected $casts = [
         'ticketsstatus' => 'array',
     ];

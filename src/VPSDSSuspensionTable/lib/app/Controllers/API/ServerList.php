@@ -10,6 +10,8 @@ class ServerList extends API
 {
     public function get()
     {
+      DB::enableQueryLog();
+
         $perpage = 20;
         $page = $this->input['page'] == 1 ? 0 : ($this->input['page'] - 1) * $perpage;
 
@@ -21,7 +23,7 @@ class ServerList extends API
             $order = 'desc';
         }
 
-        $query = Service::with(['client', 'product', 'ticketsstatus'])->server();
+        $query = Service::server();
 
         if ($this->input['withtickets']) {
             $query = $query->has('ticketsstatus');
@@ -34,18 +36,19 @@ class ServerList extends API
         }
         $total = $query->count();
 
-        $query = $query
+        $query = $query->with(['ticketsstatus'])
             ->leftJoin('vpsds_tickets_status as v', function ($join) {
                 $join->on('v.serviceid', '=', 'tblhosting.id');
                 $join->whereNull('v.deleted_at');
-            });
+            })->leftJoin('tblclients as c', 'c.id', '=', 'tblhosting.userid')
+            ->join('tblproducts as p', 'p.id', '=', 'tblhosting.packageid');
 
 
         if ($this->input['search'] != '') {
             //Rewrite date from format 09/08 to (2023-)08-09 as stored in DB
             $date = strpos($this->input['search'], '/') !== false ? implode("-", array_reverse(explode("/", $this->input['search']))) : $this->input['search'];
 
-            $query = $query->leftJoin('tblclients as c', 'c.id', '=', 'tblhosting.userid')
+            $query = $query
                 ->where(function($query) use ($date)
                 {
                     $query->where('tblhosting.domain', 'LIKE', '%' . $this->input['search'] . '%')
@@ -63,6 +66,10 @@ class ServerList extends API
             ->take((int) $perpage)
             ->orderBy($sort, $order)
             ->select([
+                'p.name AS product_name',
+                'c.firstname',
+                'c.lastname',
+                'c.datecreated',
                 'tblhosting.*',
                 'v.id AS vps_status',
                 'v.suspensionticketdate',
@@ -73,7 +80,7 @@ class ServerList extends API
                 'v.color'
             ])
             ->get();
-
+  
         return ['total' => $total, 'data' => $data];
     }
 }

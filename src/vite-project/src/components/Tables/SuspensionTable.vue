@@ -40,7 +40,7 @@
         </b-message>
       </template>
       <b-table-column field="client" label="Name" v-slot="props" width="100">
-        {{ props.row.client.firstname }} {{ props.row.client.lastname }}
+        {{ props.row.client_firstname }} {{ props.row.client_lastname }}
       </b-table-column>
       <b-table-column
         field="hostname"
@@ -82,7 +82,7 @@
         {{
           showSuspensionTicketDate(
             props.row.nextduedate,
-            props.row.client.datecreated,
+            props.row.client_datecreated,
             1
           )
         }}
@@ -117,7 +117,7 @@
         {{
           showTerminationTicketDate(
             props.row.nextduedate,
-            props.row.client.datecreated,
+            props.row.client_datecreated,
             1
           )
         }}

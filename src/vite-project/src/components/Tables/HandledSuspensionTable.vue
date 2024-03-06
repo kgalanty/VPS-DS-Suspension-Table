@@ -60,7 +60,7 @@
           </div>
           <div class="column is-narrow">
             <p class="bd-notification is-primary">
-              {{ props.row.client.datecreated }}
+              {{ props.row.client_datecreated }}
             </p>
           </div>
         </div>
@@ -113,7 +113,7 @@
         </b-message>
       </template>
       <b-table-column field="client" label="Name" v-slot="props" width="100">
-        {{ props.row.client.firstname }} {{ props.row.client.lastname }}
+        {{ props.row.client_firstname }} {{ props.row.client_lastname }}
       </b-table-column>
       <b-table-column
         field="hostname"
@@ -234,6 +234,13 @@
           size="is-small"
           :aria-expanded="props.open"
           @click="openTicketModal(props.row.id, props.row.userid)"
+        />
+        <b-button
+          label="Delete entry"
+          type="is-primary"
+          size="is-small"
+          :aria-expanded="props.open"
+          @click="markAsDeleted(props.row.id)"
         />
       </b-table-column>
     </b-table>
