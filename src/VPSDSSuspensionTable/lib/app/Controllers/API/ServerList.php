@@ -22,7 +22,7 @@ class ServerList extends API
             $order = 'desc';
         }
 
-        $query = Service::leftJoin('tblproducts as p', 'p.id', '=', 'tblhosting.packageid');
+        $query = Service::leftJoin('tblproducts as p', 'p.id', '=', 'tblhosting.packageid')->server();
 
         if ($this->input['withtickets']) {
             $query = $query->has('ticketsstatus');
