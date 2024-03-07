@@ -48,7 +48,7 @@
           </div>
           <div class="column is-narrow">
             <p class="bd-notification is-primary">
-              {{ props.row.product.name }}
+              {{ props.row.product_name }}
             </p>
           </div>
         </div>
