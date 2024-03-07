@@ -15144,6 +15144,7 @@ MIT (https://github.com/Wikiki/bulma-steps/blob/master/LICENSE)
 .b-table .table th .th-wrap {
   display: flex;
   align-items: center;
+  margin: 0 auto;
 }
 
 .b-table .table th .th-wrap .icon {
