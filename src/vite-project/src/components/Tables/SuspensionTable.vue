@@ -287,5 +287,6 @@ export default defineComponent({
   color: white !important;
   text-transform: uppercase;
   text-align: center !important;
+  margin: 0 auto;
 }
 </style>
