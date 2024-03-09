@@ -4,6 +4,7 @@ namespace WHMCS\Module\Addon\VPSDSSuspensionTable\app\Controllers\API;
 
 use WHMCS\Module\Addon\VPSDSSuspensionTable\app\Controllers\API;
 use WHMCS\Database\Capsule as DB;
+use WHMCS\Module\Addon\VPSDSSuspensionTable\app\Models\Client;
 use WHMCS\Module\Addon\VPSDSSuspensionTable\app\Models\TicketsStatus as TicketStatusModel;
 use WHMCS\Module\Addon\VPSDSSuspensionTable\app\Models\Service;
 use Illuminate\Database\Eloquent\Builder;
@@ -21,14 +22,15 @@ class TicketsStatus extends API
             if (!$ts) {
 
                 $service = Service::with(['client'])->where('id', $serviceid)->first();
-
+                $client = Client::where('id', $service->userid)->first();
+                
                 if(!$service)
                 {
                     return ['error' => 'Service not found'];
                 }
 
-                $suspensionticketdate = TicketDates::SuspensionTicketDate($service->nextduedate, $service->client->datecreated, 1);
-                $terminationticketdate = TicketDates::TerminationTicketDate($service->nextduedate, $service->client->datecreated, 1);
+                $suspensionticketdate = TicketDates::SuspensionTicketDate($service->nextduedate, $client->datecreated, 1);
+                $terminationticketdate = TicketDates::TerminationTicketDate($service->nextduedate, $client->datecreated, 1);
 
                 $ts = TicketStatusModel::create(['serviceid' => $serviceid, $column => $val, 'suspensionticketdate' => $suspensionticketdate, 'terminationticketdate' => $terminationticketdate]);
                 return ['result' => $ts];
