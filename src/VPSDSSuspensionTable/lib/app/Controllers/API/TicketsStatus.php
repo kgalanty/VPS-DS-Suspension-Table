@@ -21,9 +21,9 @@ class TicketsStatus extends API
             $ts = TicketStatusModel::where('serviceid', $serviceid)->notDeleted()->first();
             if (!$ts) {
 
-                $service = Service::with(['client'])->where('id', $serviceid)->first();
+                $service = Service::where('id', $serviceid)->first();
                 $client = Client::where('id', $service->userid)->first();
-                
+
                 if(!$service)
                 {
                     return ['error' => 'Service not found'];
